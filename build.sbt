@@ -35,7 +35,7 @@ lazy val root = project
     Seq(name := "gram")
   )
   .aggregate(
-    core
+    tensorCore
   )
 
 lazy val tensorCore = project
