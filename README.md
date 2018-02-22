@@ -169,7 +169,7 @@ def areEqual(a: Tensor[Int], b: Tensor[Int]): Boolean = {
 }
 ```
 
-## Future Work
+### Future Work
 
 - Create sparse data structures
 
