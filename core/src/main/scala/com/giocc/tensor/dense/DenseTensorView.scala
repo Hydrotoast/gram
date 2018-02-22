@@ -50,7 +50,7 @@ class DenseTensorView[@sp A](
     _base.update(index, value)
   }
 
-  override def valueIterator: Iterator[A] = {
+  override def elementIterator: Iterator[A] = {
     new DenseTensorViewValueIterator[A](this, _shape.subscriptIterator)
   }
 }

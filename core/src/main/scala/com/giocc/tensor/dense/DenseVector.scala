@@ -37,7 +37,7 @@ class DenseVector[@sp A](
     _data(sub(0)) = value
   }
 
-  override def valueIterator: Iterator[A] = {
+  override def elementIterator: Iterator[A] = {
     _data.iterator
   }
 }

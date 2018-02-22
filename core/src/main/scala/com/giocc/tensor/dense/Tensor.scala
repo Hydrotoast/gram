@@ -52,13 +52,13 @@ trait Tensor[@sp A] {
   /**
     * Iterates over the elements of the tensor.
     */
-  def valueIterator: Iterator[A]
+  def elementIterator: Iterator[A]
 
   /**
     * Constructs a dense array representation of the tensor.
     */
   def toArray(implicit ev: ClassTag[A]): Array[A] = {
-    valueIterator.toArray
+    elementIterator.toArray
   }
 
   /**
@@ -85,14 +85,14 @@ trait Tensor[@sp A] {
               areEqual(iter1, iter2))
         }
 
-        areEqual(valueIterator, that.valueIterator)
+        areEqual(elementIterator, that.elementIterator)
       case _ =>
         false
     }
   }
 
   override def hashCode(): Int = {
-    val iterator = valueIterator
+    val iterator = elementIterator
     var h = 1
     while (iterator.hasNext) {
       val elem = iterator.next()

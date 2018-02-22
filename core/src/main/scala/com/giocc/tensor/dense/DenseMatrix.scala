@@ -39,7 +39,7 @@ class DenseMatrix[@sp A](
     _data(sub(0) + _rowSize * sub(1)) = value
   }
 
-  override def valueIterator: Iterator[A] = {
+  override def elementIterator: Iterator[A] = {
     _data.iterator
   }
 }
