@@ -39,6 +39,7 @@ lazy val root = project
   )
 
 lazy val core = project
+  .in(file("tensor-core"))
   .settings(
     commonSettings ++
     versionSettings ++
