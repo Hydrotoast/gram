@@ -137,6 +137,23 @@ We design tensor operations against the `Tensor[A]` interface. Tensor
 operations are only well-defined for tensors of the same shape. We leverage
 this constraint to design optimized tensor operations.
 
+Before we dive into the concepts of tensor operations, we preview a few common
+tensor operations.
+
+```scala
+val a = Tensor.zeros[Int](Size.of(3, 2))
+val b = Tensor.ones[Int](Size.of(3, 2))
+
+// Assigns the elements of b to a
+a := b
+
+// Subtracts the elements of b from a
+a -= b
+
+// Adds the elements of b to a
+a += b
+```
+
 #### Optimal Iterators
 
 There are two strategies for designing tensor operations: using linear index
