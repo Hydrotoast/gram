@@ -32,7 +32,7 @@ lazy val root = project
   .settings(
     commonSettings ++
     disablePublishSettings ++
-    Seq(name := "tensor")
+    Seq(name := "gram")
   )
   .aggregate(
     core
