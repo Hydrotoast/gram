@@ -1,5 +1,9 @@
 package com.giocc
 
+import com.giocc.tensor.dense.{Tensor, TensorOps}
+
+import scala.{specialized => sp}
+
 package object tensor {
   /**
     * Given coordinates, creates a subscript.
@@ -51,4 +55,13 @@ package object tensor {
     * @return The singleton range.
     */
   def point(point: Int): Point = Point(point)
+
+  /**
+    * Given a tensor, enriches it binary tensor operations.
+    *
+    * @param tensor The tensor to wrap.
+    * @tparam A The elemenent type of the tensor.
+    * @return a tensor with binary tensor operations.
+    */
+  implicit def mkTensorOps[@sp A](tensor: Tensor[A]): TensorOps[A] = TensorOps.of(tensor)
 }
