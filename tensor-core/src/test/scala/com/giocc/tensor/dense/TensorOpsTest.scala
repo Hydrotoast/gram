@@ -19,10 +19,10 @@ class TensorOpsTest extends FunSuite {
 
   test("TensorOps should assign with views on rhs") {
     val a = Tensor.zeros[Int](Shape.of(3, 2))
-    val bView = Tensor.ones[Int](Shape.of(3, 2, 2))
-      .view(range(zeroTo(3), zeroTo(2), point(0)))
+    val b = Tensor.ones[Int](Shape.of(3, 2, 2))
 
-    a := bView
+
+    a := b.view(range(zeroTo(3), zeroTo(2), point(0)))
 
     val expected = Tensor.ones[Int](Shape.of(3, 2))
     a shouldBe expected
@@ -30,11 +30,9 @@ class TensorOpsTest extends FunSuite {
 
   test("TensorOps should assign with views on the lhs") {
     val a = Tensor.zeros[Int](Shape.of(3, 2, 2))
-    val aView = a
-      .view(range(zeroTo(3), zeroTo(2), point(0)))
     val b = Tensor.ones[Int](Shape.of(3, 2))
 
-    aView := b
+    a.view(range(zeroTo(3), zeroTo(2), point(0))) := b
 
     val onesPart = Array.fill[Int](3 * 2)(1)
     val data = new Array[Int](3 * 2 * 2)
