@@ -42,6 +42,10 @@ class DenseTensor[@sp A](
   override def elementIterator: Iterator[A] = {
     _data.iterator
   }
+
+  override def indexStyle: IndexStyle = {
+    LinearIndexing
+  }
 }
 
 

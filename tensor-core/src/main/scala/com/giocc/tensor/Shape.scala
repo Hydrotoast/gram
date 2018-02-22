@@ -2,7 +2,7 @@ package com.giocc.tensor
 
 import java.util
 
-import com.giocc.tensor.iterator.{CoordinateIterator, SubscriptIterator}
+import com.giocc.tensor.iterator.{CoordinateIterator, LinearIndexIterator, SubscriptIterator}
 
 /**
   * Represents the size of each dimension of an N-dimensional coordinate system. This data structure is immutable.
@@ -44,6 +44,13 @@ class Shape(
     */
   def toArray: Array[Int] = {
     _sizes.clone()
+  }
+
+  /**
+    * An iterator over the valid linear indices within this shape.
+    */
+  def linearIndexIterator: LinearIndexIterator = {
+    new LinearIndexIterator(this)
   }
 
   /**

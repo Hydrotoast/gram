@@ -1,6 +1,6 @@
 package com.giocc.tensor.dense
 
-import com.giocc.tensor.{Shape, Subscript}
+import com.giocc.tensor.{IndexStyle, LinearIndexing, Shape, Subscript}
 
 import scala.{specialized => sp}
 
@@ -41,5 +41,9 @@ class DenseMatrix[@sp A](
 
   override def elementIterator: Iterator[A] = {
     _data.iterator
+  }
+
+  override def indexStyle: IndexStyle = {
+    LinearIndexing
   }
 }

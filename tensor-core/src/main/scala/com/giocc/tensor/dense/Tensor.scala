@@ -1,6 +1,6 @@
 package com.giocc.tensor.dense
 
-import com.giocc.tensor.{CartesianRange, Shape, Subscript}
+import com.giocc.tensor.{CartesianRange, IndexStyle, Shape, Subscript}
 
 import scala.annotation.tailrec
 import scala.reflect.ClassTag
@@ -53,6 +53,11 @@ trait Tensor[@sp A] {
     * Iterates over the elements of the tensor.
     */
   def elementIterator: Iterator[A]
+
+  /**
+    * The optimal style of indexing.
+    */
+  def indexStyle: IndexStyle
 
   /**
     * Constructs a dense array representation of the tensor.

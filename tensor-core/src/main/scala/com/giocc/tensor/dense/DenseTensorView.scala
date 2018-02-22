@@ -53,6 +53,10 @@ class DenseTensorView[@sp A](
   override def elementIterator: Iterator[A] = {
     new DenseTensorViewValueIterator[A](this, _shape.subscriptIterator)
   }
+
+  override def indexStyle: IndexStyle = {
+    SubscriptIndexing
+  }
 }
 
 /**
