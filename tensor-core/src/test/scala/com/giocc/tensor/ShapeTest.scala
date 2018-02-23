@@ -74,4 +74,34 @@ class ShapeTest extends FunSuite {
 
     shape1 should not be shape2
   }
+
+  test("Linear index should iterator over valid linear indices across multiple dimensions") {
+    val shape = Shape.of(3, 2)
+    val linearIndexIterator = shape.linearIndexIterator
+
+    // Lienar index iteration should be equivalent to column-major iteration.
+    linearIndexIterator.hasNext shouldBe true
+    (0 until 2).foreach { j =>
+      (0 until 3).foreach { i =>
+        val linearIndex = linearIndexIterator.next()
+        linearIndex shouldBe i + 3 * j
+      }
+    }
+    linearIndexIterator.hasNext shouldBe false
+  }
+
+  test("SusbcriptIterator should iterator over subscripts across multiple dimensions") {
+    val shape = Shape.of(3, 2)
+    val subscriptIterator = shape.subscriptIterator
+
+    // Subscript iteration should be equivalent to multi-dimensional iteration.
+    subscriptIterator.hasNext shouldBe true
+    (0 until 2).foreach { j =>
+      (0 until 3).foreach { i =>
+        val subscript = subscriptIterator.next()
+        subscript shouldBe Subscript.of(i, j)
+      }
+    }
+    subscriptIterator.hasNext shouldBe false
+  }
 }
