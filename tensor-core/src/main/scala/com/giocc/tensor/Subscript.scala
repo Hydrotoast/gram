@@ -40,7 +40,7 @@ class Subscript(
     * A coordinate iterator over the coordinates of this subscript.
     */
   def coordinateIterator: CoordinateIterator = {
-    new SubscriptCoordinateIterator(this)
+    new SubscriptCoordinateIterator()
   }
 
   override def toString: String = {
@@ -53,30 +53,27 @@ class Subscript(
   }
 
   override def hashCode(): Int = util.Arrays.hashCode(_coordinates)
-}
 
-/**
-  * Iterates over each coordinate of a subscript.
-  *
-  * @param _subscript The subscript to iterate over.
-  */
-private class SubscriptCoordinateIterator(
-  _subscript: Subscript
-) extends CoordinateIterator {
-  private var _currentDimension: Int = -1
+  /**
+    * Iterates over each coordinate of a subscript.
+    */
+  private class SubscriptCoordinateIterator extends CoordinateIterator {
+    private var _currentDimension: Int = -1
 
-  override def hasNext: Boolean = {
-    _currentDimension < _subscript.order - 1
-  }
-
-  override def next(): Int = {
-    if (!hasNext) {
-      throw new IllegalStateException()
+    override def hasNext: Boolean = {
+      _currentDimension < order - 1
     }
 
-    _currentDimension += 1
-    _subscript(_currentDimension)
+    override def next(): Int = {
+      if (!hasNext) {
+        throw new IllegalStateException()
+      }
+
+      _currentDimension += 1
+      apply(_currentDimension)
+    }
   }
+
 }
 
 object Subscript {

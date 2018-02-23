@@ -66,7 +66,7 @@ class CartesianRange(
     * @return A new coordinate iterator mapped by the cartesian range.
     */
   def map(coordinateIterator: CoordinateIterator): CoordinateIterator = {
-    new CartesianRangeCoordinateIterator(coordinateIterator, this)
+    new CartesianRangeCoordinateIterator(coordinateIterator)
   }
 
   override def equals(other: Any): Boolean = {
@@ -79,40 +79,39 @@ class CartesianRange(
   override def hashCode(): Int = {
     util.Arrays.hashCode(_ordinalRanges.asInstanceOf[Array[Object]])
   }
-}
 
-/**
-  * Iterates over the cartesian range mapping of a coordinate iterator.
-  *
-  * @param _iterator The coordinate iterator to map over.
-  * @param _range    The cartesian range to map.
-  */
-private class CartesianRangeCoordinateIterator(
-  _iterator: CoordinateIterator,
-  _range: CartesianRange
-) extends CoordinateIterator {
-  private var _currentDimension: Int = -1
+  /**
+    * Iterates over the cartesian range mapping of a coordinate iterator.
+    *
+    * @param _iterator The coordinate iterator to map over.
+    */
+  private class CartesianRangeCoordinateIterator(
+    _iterator: CoordinateIterator
+  ) extends CoordinateIterator {
+    private var _currentDimension: Int = -1
 
-  override def hasNext: Boolean = {
-    _currentDimension < _range.rangeOrder - 1
-  }
-
-  override def next(): Int = {
-    if (!hasNext) {
-      throw new IllegalStateException()
+    override def hasNext: Boolean = {
+      _currentDimension < rangeOrder - 1
     }
 
-    _currentDimension += 1
-    val unitRange = _range(_currentDimension)
-    if (unitRange.isSingleton) {
-      unitRange.point
-    } else if (_iterator.hasNext) {
-      val coordinate = _iterator.next()
-      unitRange(coordinate)
-    } else {
-      throw new IllegalStateException()
+    override def next(): Int = {
+      if (!hasNext) {
+        throw new IllegalStateException()
+      }
+
+      _currentDimension += 1
+      val unitRange = apply(_currentDimension)
+      if (unitRange.isSingleton) {
+        unitRange.point
+      } else if (_iterator.hasNext) {
+        val coordinate = _iterator.next()
+        unitRange(coordinate)
+      } else {
+        throw new IllegalStateException()
+      }
     }
   }
+
 }
 
 object CartesianRange {

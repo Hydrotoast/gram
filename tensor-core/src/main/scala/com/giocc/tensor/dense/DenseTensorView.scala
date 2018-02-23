@@ -51,37 +51,35 @@ class DenseTensorView[@sp A](
   }
 
   override def elementIterator: Iterator[A] = {
-    new DenseTensorViewValueIterator[A](this, _shape.subscriptIterator)
+    new DenseTensorViewElementIterator(_shape.subscriptIterator)
   }
 
   override def indexStyle: IndexStyle = {
     SubscriptIndexing
   }
-}
 
-/**
-  * Iterates over the values of a tensor view using subscript indexing.
-  *
-  * @param _tensorView        The tensor view.
-  * @param _subscriptIterator The subscript iterator to perform indexing on.
-  * @tparam A The element type of the tensor.
-  */
-class DenseTensorViewValueIterator[@sp A](
-  _tensorView: DenseTensorView[A],
-  _subscriptIterator: SubscriptIterator
-) extends Iterator[A] {
-  override def hasNext: Boolean = {
-    _subscriptIterator.hasNext
-  }
-
-  override def next(): A = {
-    if (!hasNext) {
-      throw new IllegalStateException()
+  /**
+    * Iterates over the values of a tensor view using subscript indexing.
+    *
+    * @param _subscriptIterator The subscript iterator to perform indexing on.
+    */
+  private class DenseTensorViewElementIterator(
+    _subscriptIterator: SubscriptIterator
+  ) extends Iterator[A] {
+    override def hasNext: Boolean = {
+      _subscriptIterator.hasNext
     }
 
-    val subscript = _subscriptIterator.next()
-    _tensorView(subscript)
+    override def next(): A = {
+      if (!hasNext) {
+        throw new IllegalStateException()
+      }
+
+      val subscript = _subscriptIterator.next()
+      apply(subscript)
+    }
   }
+
 }
 
 object DenseTensorView {
