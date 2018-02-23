@@ -1,7 +1,6 @@
 package com.giocc.tensor.dense
 
 import com.giocc.tensor._
-import com.giocc.tensor.iterator.SubscriptIterator
 
 import scala.{specialized => sp}
 
@@ -51,35 +50,12 @@ class DenseTensorView[@sp A](
   }
 
   override def elementIterator: Iterator[A] = {
-    new DenseTensorViewElementIterator(_shape.subscriptIterator)
+    new SubscriptElementIterator(_shape.subscriptIterator)
   }
 
   override def indexStyle: IndexStyle = {
     SubscriptIndexing
   }
-
-  /**
-    * Iterates over the values of a tensor view using subscript indexing.
-    *
-    * @param _subscriptIterator The subscript iterator to perform indexing on.
-    */
-  private class DenseTensorViewElementIterator(
-    _subscriptIterator: SubscriptIterator
-  ) extends Iterator[A] {
-    override def hasNext: Boolean = {
-      _subscriptIterator.hasNext
-    }
-
-    override def next(): A = {
-      if (!hasNext) {
-        throw new IllegalStateException()
-      }
-
-      val subscript = _subscriptIterator.next()
-      apply(subscript)
-    }
-  }
-
 }
 
 object DenseTensorView {

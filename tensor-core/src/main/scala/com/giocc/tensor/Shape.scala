@@ -2,7 +2,7 @@ package com.giocc.tensor
 
 import java.util
 
-import com.giocc.tensor.iterator.{CoordinateIterator, LinearIndexIterator, SubscriptIterator}
+import com.giocc.tensor.iterator.CoordinateIterator
 
 /**
   * Represents the size of each dimension of an N-dimensional coordinate system. This data structure is immutable.
@@ -49,15 +49,15 @@ class Shape(
   /**
     * An iterator over the valid linear indices within this shape.
     */
-  def linearIndexIterator: LinearIndexIterator = {
-    new LinearIndexIterator(this)
+  def linearIndexIterator: Iterator[Int] = {
+    new LinearIndexIterator()
   }
 
   /**
     * An iterator over the valid subscripts within this shape.
     */
-  def subscriptIterator: SubscriptIterator = {
-    new SubscriptIterator(this)
+  def subscriptIterator: Iterator[Subscript] = {
+    new SubscriptIterator()
   }
 
   /**
@@ -93,7 +93,7 @@ class Shape(
     private var _currentInd = _ind
 
     override def hasNext: Boolean = {
-      (_currentDimension + 1) < order
+      (_currentDimension + 1) < Shape.this.order
     }
 
     override def next(): Int = {
@@ -106,6 +106,69 @@ class Shape(
       _currentInd /= apply(_currentDimension)
 
       coordinate
+    }
+  }
+
+  /**
+    * Iterates over the valid linear indices within the given shape.
+    */
+  private class LinearIndexIterator extends Iterator[Int] {
+    private val _length: Int = Shape.this.length
+    private var _item: Int = -1
+
+    override def hasNext: Boolean = {
+      _item < _length - 1
+    }
+
+    override def next(): Int = {
+      if (!hasNext) {
+        throw new IllegalStateException()
+      }
+
+      _item += 1
+      _item
+    }
+  }
+
+  /**
+    * Iterates over the valid subscripts within the given shape.
+    */
+  private class SubscriptIterator extends Iterator[Subscript] {
+    private val _length: Int = Shape.this.length
+    private var _item: Int = 0
+    private val _coordinates: Array[Int] = {
+      val buffer = new Array[Int](order)
+      buffer(0) = -1
+      buffer
+    }
+
+    override def hasNext: Boolean = {
+      _item < _length
+    }
+
+    override def next(): Subscript = {
+      if (!hasNext) {
+        throw new IllegalStateException()
+      }
+
+      updateCoordinates()
+      _item += 1
+      new Subscript(_coordinates)
+    }
+
+    private def updateCoordinates(): Unit = {
+      // Find the first position where the coordinate has not reached its upper bound
+      var i = 0
+      while (i < _coordinates.length && _coordinates(i) == (apply(i) - 1)) {
+        _coordinates(i) = 0
+        i += 1
+      }
+      // Update the position if we have not reached the end of the coordinates
+      if (i == _coordinates.length) {
+        throw new IllegalStateException()
+      } else { // _coordinates(i) != _shape(i)
+        _coordinates(i) += 1
+      }
     }
   }
 
