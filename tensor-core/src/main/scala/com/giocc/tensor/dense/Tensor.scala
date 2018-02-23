@@ -105,28 +105,6 @@ trait Tensor[@sp A] {
     }
     h
   }
-
-  /**
-    * Iterates over the values of a tensor view using subscript indexing.
-    *
-    * @param _subscriptIterator The subscript iterator to perform indexing on.
-    */
-  protected class SubscriptElementIterator(
-    _subscriptIterator: Iterator[Subscript]
-  ) extends Iterator[A] {
-    override def hasNext: Boolean = {
-      _subscriptIterator.hasNext
-    }
-
-    override def next(): A = {
-      if (!hasNext) {
-        throw new IllegalStateException()
-      }
-
-      val subscript = _subscriptIterator.next()
-      apply(subscript)
-    }
-  }
 }
 
 object Tensor {
