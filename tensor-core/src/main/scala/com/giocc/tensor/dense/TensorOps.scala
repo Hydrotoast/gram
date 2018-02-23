@@ -10,7 +10,9 @@ import scala.{specialized => sp}
   * @param underlying The underlying tensor.
   * @tparam A The type of the elements of the tensor.
   */
-class TensorOps[@sp A](underlying: Tensor[A]) {
+class TensorOps[@sp A](
+  underlying: Tensor[A]
+) {
   /**
     * Given a tensor, assigns the elements of the other tensor to the underlying tensor.
     *

@@ -12,7 +12,7 @@ import scala.{specialized => sp}
   * @param _data    The underlying data storage of the tensor.
   * @tparam A The type of each element in the tensor.
   */
-class DenseMatrix[@sp A](
+private[tensor] class DenseMatrix[@sp A](
   _rowSize: Int,
   _colSize: Int,
   _data: Array[A]

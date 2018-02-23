@@ -12,7 +12,7 @@ import scala.{specialized => sp}
   * @param _base  The base tensor to index from.
   * @tparam A The type of the elements stored in the tensor.
   */
-class DenseTensorView[@sp A](
+private[tensor] class DenseTensorView[@sp A](
   _shape: Shape,
   _range: CartesianRange,
   _base: Tensor[A]

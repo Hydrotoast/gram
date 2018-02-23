@@ -11,7 +11,7 @@ import scala.{specialized => sp}
   * @param _data  The underlying data storage of the tensor.
   * @tparam A The type of each element in the tensor.
   */
-class DenseTensor[@sp A](
+private[tensor] class DenseTensor[@sp A](
   _shape: Shape,
   _data: Array[A]
 ) extends Tensor[A] {
