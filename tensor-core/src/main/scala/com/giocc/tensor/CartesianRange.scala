@@ -24,24 +24,6 @@ class CartesianRange(
   def apply(dimension: Int): OrdinalRange = _ordinalRanges(dimension)
 
   /**
-    * The number of dimensions of the range.
-    */
-  def rangeOrder: Int = _ordinalRanges.length
-
-  /**
-    * The number of dimensions of the domain. Computed in O(M) time.
-    */
-  def domainOrder: Int = {
-    var result = 0
-    var i = 0
-    while (i < _ordinalRanges.length) {
-      result += (if (_ordinalRanges(i).isIndexable) 1 else 0)
-      i += 1
-    }
-    result
-  }
-
-  /**
     * The shape of the domain. Computed in O(M) time.
     */
   def domainShape: Shape = {
@@ -79,6 +61,24 @@ class CartesianRange(
   override def hashCode(): Int = {
     util.Arrays.hashCode(_ordinalRanges.asInstanceOf[Array[Object]])
   }
+
+  /**
+    * The number of dimensions of the domain. Computed in O(M) time.
+    */
+  private[tensor] def domainOrder: Int = {
+    var result = 0
+    var i = 0
+    while (i < _ordinalRanges.length) {
+      result += (if (_ordinalRanges(i).isIndexable) 1 else 0)
+      i += 1
+    }
+    result
+  }
+
+  /**
+    * The number of dimensions of the range.
+    */
+  private[tensor] def rangeOrder: Int = _ordinalRanges.length
 
   /**
     * Iterates over the cartesian range mapping of a coordinate iterator.
