@@ -7,7 +7,7 @@ sealed trait OrdinalRange {
   /**
     * The number of distinct, valid elements in the domain.
     */
-  def domainSize: Int
+  private[tensor] def domainSize: Int
 
   /**
     * True if this range is a single point.
