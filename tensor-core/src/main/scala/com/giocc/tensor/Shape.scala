@@ -2,8 +2,6 @@ package com.giocc.tensor
 
 import java.util
 
-import com.giocc.tensor.iterator.CoordinateIterator
-
 /**
   * Represents the size of each dimension of an N-dimensional coordinate system. This data structure is immutable.
   *
@@ -17,10 +15,10 @@ class Shape(
   /**
     * Given a dimension, return the size of the dimension.
     *
-    * @param dim The dimension.
+    * @param dimension The dimension.
     * @return The size of the dimension.
     */
-  def apply(dim: Int): Int = _sizes(dim)
+  def apply(dimension: Int): Int = _sizes(dimension)
 
   /**
     * The number of dimensions.

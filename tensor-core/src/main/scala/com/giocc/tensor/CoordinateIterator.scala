@@ -1,6 +1,4 @@
-package com.giocc.tensor.iterator
-
-import com.giocc.tensor.Shape
+package com.giocc.tensor
 
 /**
   * Iterates over N-dimensional coordinates.

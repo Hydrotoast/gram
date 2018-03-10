@@ -2,8 +2,6 @@ package com.giocc.tensor
 
 import java.util
 
-import com.giocc.tensor.iterator.CoordinateIterator
-
 /**
   * Represents an N-dimensional point with n coordinates. We call the number of dimensions, N, the order. This data
   * structure is immutable.
@@ -21,31 +19,17 @@ class Subscript(
   def order: Int = _coordinates.length
 
   /**
-    * Given a dimension, returns the corresponding coordinate.
-    *
-    * @param dim The dimension,
-    * @return The corresponding coordinate.
-    */
-  def apply(dim: Int): Int = _coordinates(dim)
-
-  /**
     * Constructs an array where each index represents a dimension and each element corresponds to the coordinate of
     * the given dimension.
     */
-  def toArray: Array[Int] = {
-    _coordinates.clone()
-  }
+  def toArray: Array[Int] = _coordinates.clone()
 
   /**
     * A coordinate iterator over the coordinates of this subscript.
     */
-  def coordinateIterator: CoordinateIterator = {
-    new SubscriptCoordinateIterator()
-  }
+  def coordinateIterator: CoordinateIterator = new SubscriptCoordinateIterator()
 
-  override def toString: String = {
-    _coordinates.mkString("(", ",", ")")
-  }
+  override def toString: String = _coordinates.mkString("(", ",", ")")
 
   override def equals(other: Any): Boolean = other match {
     case that: Subscript => _coordinates.sameElements(that._coordinates)
@@ -53,6 +37,14 @@ class Subscript(
   }
 
   override def hashCode(): Int = util.Arrays.hashCode(_coordinates)
+
+  /**
+    * Given a dimension, returns the corresponding coordinate.
+    *
+    * @param dim The dimension,
+    * @return The corresponding coordinate.
+    */
+  private[tensor] def apply(dim: Int): Int = _coordinates(dim)
 
   /**
     * Iterates over each coordinate of a subscript.
@@ -73,7 +65,6 @@ class Subscript(
       apply(_currentDimension)
     }
   }
-
 }
 
 object Subscript {

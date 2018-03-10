@@ -2,8 +2,6 @@ package com.giocc.tensor
 
 import java.util
 
-import com.giocc.tensor.iterator.CoordinateIterator
-
 /**
   * A monotonic function from an N-dimensional coordinate system to an M-dimensional coordinate system where N <= M.
   * The size of the domain is always defined to be [0, size) for each dimension. This data structure is immutable.
@@ -12,16 +10,9 @@ import com.giocc.tensor.iterator.CoordinateIterator
   */
 class SubscriptMap(
   private val _coordinateMaps: Array[CoordinateMap]
-) { self =>
+) {
+  self =>
   require(_coordinateMaps.nonEmpty)
-
-  /**
-    * Given a dimension, return the corresponding ordinal range.
-    *
-    * @param dimension The dimension.
-    * @return The corresponding ordinal range.
-    */
-  def apply(dimension: Int): CoordinateMap = _coordinateMaps(dimension)
 
   /**
     * The shape of the domain. Computed in O(M) time.
@@ -48,7 +39,7 @@ class SubscriptMap(
     * @return A new coordinate iterator mapped by the cartesian range.
     */
   def map(coordinateIterator: CoordinateIterator): CoordinateIterator = {
-    new CartesianRangeCoordinateIterator(coordinateIterator)
+    new SubscriptMapCoordinateIterator(coordinateIterator)
   }
 
   override def equals(other: Any): Boolean = {
@@ -61,6 +52,14 @@ class SubscriptMap(
   override def hashCode(): Int = {
     util.Arrays.hashCode(_coordinateMaps.asInstanceOf[Array[Object]])
   }
+
+  /**
+    * Given a dimension, return the corresponding ordinal range.
+    *
+    * @param dimension The dimension.
+    * @return The corresponding ordinal range.
+    */
+  private[tensor] def apply(dimension: Int): CoordinateMap = _coordinateMaps(dimension)
 
   /**
     * The number of dimensions of the domain. Computed in O(M) time.
@@ -85,7 +84,7 @@ class SubscriptMap(
     *
     * @param _iterator The coordinate iterator to map over.
     */
-  private class CartesianRangeCoordinateIterator(
+  private class SubscriptMapCoordinateIterator(
     _iterator: CoordinateIterator
   ) extends CoordinateIterator {
     private var _currentDimension: Int = -1
@@ -111,7 +110,6 @@ class SubscriptMap(
       }
     }
   }
-
 }
 
 object SubscriptMap {

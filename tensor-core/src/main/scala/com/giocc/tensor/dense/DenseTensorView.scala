@@ -50,35 +50,16 @@ private[tensor] class DenseTensorView[@sp A](
   }
 
   override def elementIterator: Iterator[A] = {
-    new SubscriptElementIterator(_shape.subscriptIterator)
+    _shape.subscriptIterator
+      .map(_.coordinateIterator)
+      .map(_subscriptMap.map)
+      .map(_.toIndex(_base.shape))
+      .map(apply)
   }
 
   override def indexStyle: IndexStyle = {
     SubscriptIndexing
   }
-
-  /**
-    * Iterates over the values of a tensor view using subscript indexing.
-    *
-    * @param _subscriptIterator The subscript iterator to perform indexing on.
-    */
-  private class SubscriptElementIterator(
-    _subscriptIterator: Iterator[Subscript]
-  ) extends Iterator[A] {
-    override def hasNext: Boolean = {
-      _subscriptIterator.hasNext
-    }
-
-    override def next(): A = {
-      if (!hasNext) {
-        throw new IllegalStateException()
-      }
-
-      val subscript = _subscriptIterator.next()
-      apply(subscript)
-    }
-  }
-
 }
 
 object DenseTensorView {
