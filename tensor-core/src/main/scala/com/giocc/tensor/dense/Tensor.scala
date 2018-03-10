@@ -12,6 +12,7 @@ import scala.{specialized => sp}
   * @tparam A The type of the elements stored in the tensor.
   */
 trait Tensor[@sp A] {
+
   /**
     * The shape of the tensor.
     */
@@ -84,10 +85,10 @@ trait Tensor[@sp A] {
           iter2: Iterator[A]
         ): Boolean = {
           iter1.isEmpty && iter2.isEmpty ||
-            (iter1.hasNext &&
-              iter2.hasNext &&
-              iter1.next().equals(iter2.next()) &&
-              areEqual(iter1, iter2))
+          (iter1.hasNext &&
+          iter2.hasNext &&
+          iter1.next().equals(iter2.next()) &&
+          areEqual(iter1, iter2))
         }
 
         areEqual(elementIterator, that.elementIterator)
@@ -108,12 +109,12 @@ trait Tensor[@sp A] {
 }
 
 object Tensor {
-  def zeros[@sp A: Numeric : ClassTag](shape: Shape): Tensor[A] = {
+  def zeros[@sp A: Numeric: ClassTag](shape: Shape): Tensor[A] = {
     val data = Array.fill[A](shape.length)(implicitly[Numeric[A]].zero)
     create(shape, data)
   }
 
-  def ones[@sp A: Numeric : ClassTag](shape: Shape): Tensor[A] = {
+  def ones[@sp A: Numeric: ClassTag](shape: Shape): Tensor[A] = {
     val data = Array.fill[A](shape.length)(implicitly[Numeric[A]].one)
     create(shape, data)
   }

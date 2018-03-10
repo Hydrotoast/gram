@@ -4,6 +4,7 @@ package com.giocc.tensor
   * A monotonic function over the discrete interval [0, domainSize) to some discrete range.
   */
 sealed trait OrdinalRange {
+
   /**
     * The number of distinct, valid elements in the domain.
     */

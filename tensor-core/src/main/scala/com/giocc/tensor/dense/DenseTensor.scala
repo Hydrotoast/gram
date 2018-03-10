@@ -47,6 +47,3 @@ private[tensor] class DenseTensor[@sp A](
     LinearIndexing
   }
 }
-
-
-

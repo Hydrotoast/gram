@@ -6,6 +6,7 @@ import com.giocc.tensor.Shape
   * Iterates over N-dimensional coordinates.
   */
 trait CoordinateIterator extends Iterator[Int] {
+
   /**
     * Given a shape, aggregates the remaining coordinates into a cartesian index within the shape.
     *

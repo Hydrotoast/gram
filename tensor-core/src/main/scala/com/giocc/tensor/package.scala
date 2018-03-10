@@ -5,6 +5,7 @@ import com.giocc.tensor.dense.{Tensor, TensorOps}
 import scala.{specialized => sp}
 
 package object tensor {
+
   /**
     * Given coordinates, creates a subscript.
     *
