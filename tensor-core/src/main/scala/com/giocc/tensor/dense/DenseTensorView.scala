@@ -7,44 +7,44 @@ import scala.{specialized => sp}
 /**
   * Represents a view of a tensor e.g. a vector slice of a matrix.
   *
-  * @param _shape The shape of the view.
-  * @param _range The cartesian range used to generate the view.
   * @param _base  The base tensor to index from.
+  * @param _subscriptMap The cartesian range used to generate the view.
   * @tparam A The type of the elements stored in the tensor.
   */
 private[tensor] class DenseTensorView[@sp A](
-  _shape: Shape,
-  _range: CartesianRange,
-  _base: Tensor[A]
+  _base: Tensor[A],
+  _subscriptMap: SubscriptMap
 ) extends Tensor[A] {
+  private val _shape = _subscriptMap.domainShape
+
   override def shape: Shape = {
     _shape
   }
 
   override def apply(ind: Int): A = {
     val coordinateIterator = _shape.coordinateIteratorOf(ind)
-    val rangeMappedIterator = _range.map(coordinateIterator)
-    val index = rangeMappedIterator.toIndex(_base.shape)
+    val subscriptMappedIterator = _subscriptMap.map(coordinateIterator)
+    val index = subscriptMappedIterator.toIndex(_base.shape)
     _base(index)
   }
 
   override def update(ind: Int, value: A): Unit = {
     val coordinateIterator = _shape.coordinateIteratorOf(ind)
-    val rangeMappedIterator = _range.map(coordinateIterator)
-    val index = rangeMappedIterator.toIndex(_base.shape)
+    val subscriptMappedIterator = _subscriptMap.map(coordinateIterator)
+    val index = subscriptMappedIterator.toIndex(_base.shape)
     _base.update(index, value)
   }
 
   override def apply(sub: Subscript): A = {
     val coordinateIterator = sub.coordinateIterator
-    val rangeMappedIterator = _range.map(coordinateIterator)
-    val index = rangeMappedIterator.toIndex(_base.shape)
+    val subscriptMappedIterator = _subscriptMap.map(coordinateIterator)
+    val index = subscriptMappedIterator.toIndex(_base.shape)
     _base(index)
   }
 
   override def update(sub: Subscript, value: A): Unit = {
     val coordinateIterator = sub.coordinateIterator
-    val rangedMappedIterator = _range.map(coordinateIterator)
+    val rangedMappedIterator = _subscriptMap.map(coordinateIterator)
     val index = rangedMappedIterator.toIndex(_base.shape)
     _base.update(index, value)
   }
@@ -83,10 +83,9 @@ private[tensor] class DenseTensorView[@sp A](
 
 object DenseTensorView {
   def of[@sp A](
-    shape: Shape,
-    range: CartesianRange,
-    tensor: Tensor[A]
+    tensor: Tensor[A],
+    subscriptMap: SubscriptMap
   ): DenseTensorView[A] = {
-    new DenseTensorView[A](shape, range, tensor)
+    new DenseTensorView[A](tensor, subscriptMap)
   }
 }

@@ -1,9 +1,9 @@
 package com.giocc.tensor
 
 /**
-  * A monotonic function over the discrete interval [0, domainSize) to some discrete range.
+  * A monotonic map from the discrete interval [0, domainSize) to some discrete range.
   */
-sealed trait OrdinalRange {
+sealed trait CoordinateMap {
 
   /**
     * The number of distinct, valid elements in the domain.
@@ -11,20 +11,15 @@ sealed trait OrdinalRange {
   private[tensor] def domainSize: Int
 
   /**
-    * True if this range is a single point.
+    * True if the range is a single point i.e. the map is a constant function.
     */
-  def isSingleton: Boolean = domainSize == 1
+  def isConstant: Boolean = domainSize == 1
 
   /**
     * The point that this function maps to if it is a singleton. The behavior is undefined if this range is not a
     * singleton.
     */
-  def point: Int
-
-  /**
-    * True if this range is not a single point i.e. has two or more valid points.
-    */
-  def isIndexable: Boolean = !isSingleton
+  def singleton: Int
 
   /**
     * Given an element of the domain, returns the corresponding mapping. The behavior is undefined if the element
@@ -33,7 +28,7 @@ sealed trait OrdinalRange {
     * @param x The element of the domain.
     * @return The corresponding mapping.
     */
-  def apply(x: Int): Int
+  def map(x: Int): Int
 }
 
 /**
@@ -43,12 +38,12 @@ sealed trait OrdinalRange {
   */
 final case class ZeroTo(
   end: Int
-) extends OrdinalRange {
+) extends CoordinateMap {
   require(end > 0, s"end must be positive to produce a valid range: end=$end")
 
   override def domainSize: Int = end
-  override def point: Int = end - 1
-  override def apply(x: Int): Int = x
+  override def singleton: Int = end - 1
+  override def map(x: Int): Int = x
 }
 
 /**
@@ -60,12 +55,12 @@ final case class ZeroTo(
 final case class Slice(
   start: Int,
   end: Int
-) extends OrdinalRange {
+) extends CoordinateMap {
   require(end > start, s"end should be greater than start i.e. end > start: $end > $start")
 
   override def domainSize: Int = end - start
-  override def point: Int = start
-  override def apply(x: Int): Int = start + x
+  override def singleton: Int = start
+  override def map(x: Int): Int = start + x
 }
 
 /**
@@ -79,26 +74,26 @@ final case class Step(
   start: Int,
   end: Int,
   step: Int
-) extends OrdinalRange {
+) extends CoordinateMap {
   require(end > start, s"end should be greater than start i.e. end > start: $end > $start")
   require(step > 0, s"step should be positive: step=$step")
 
   override def domainSize: Int = (end - start) / step
-  override def point: Int = start
-  override def apply(x: Int): Int = start + x * step
+  override def singleton: Int = start
+  override def map(x: Int): Int = start + x * step
 }
 
 /**
   * Represents a mapping to a single point. This is always a singleton range.
   *
-  * @param point The point to the map to.
+  * @param singleton The point to the map to.
   */
 final case class Point(
-  point: Int
-) extends OrdinalRange {
-  require(point >= 0, s"point should be non-negative to be valid: point=$point")
+  singleton: Int
+) extends CoordinateMap {
+  require(singleton >= 0, s"point should be non-negative to be valid: point=$singleton")
 
   override def domainSize: Int = 1
-  override def isSingleton: Boolean = true
-  override def apply(x: Int): Int = throw new UnsupportedOperationException
+  override def isConstant: Boolean = true
+  override def map(x: Int): Int = throw new UnsupportedOperationException
 }

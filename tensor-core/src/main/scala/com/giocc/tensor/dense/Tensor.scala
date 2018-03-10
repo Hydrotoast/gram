@@ -1,6 +1,6 @@
 package com.giocc.tensor.dense
 
-import com.giocc.tensor.{CartesianRange, IndexStyle, Shape, Subscript}
+import com.giocc.tensor.{IndexStyle, Shape, Subscript, SubscriptMap}
 
 import scala.annotation.tailrec
 import scala.reflect.ClassTag
@@ -68,27 +68,31 @@ trait Tensor[@sp A] {
   }
 
   /**
-    * Given a cartesian range, constructs a tensor view that maps to the given cartesian range.
+    * Given a susbcript map, constructs a tensor view that maps its subscripts using the subscript map.
     *
-    * @param range The cartesian range.
+    * @param subscriptMap The subscript map.
     * @return The tensor view.
     */
-  def view(range: CartesianRange): DenseTensorView[A] = {
-    DenseTensorView.of[A](range.domainShape, range, this)
+  def view(subscriptMap: SubscriptMap): DenseTensorView[A] = {
+    DenseTensorView.of[A](this, subscriptMap)
   }
 
   override def equals(o: Any): Boolean = {
     o match {
       case that: Tensor[A] =>
+        elementIterator.equals()
+
         @tailrec def areEqual(
           iter1: Iterator[A],
           iter2: Iterator[A]
         ): Boolean = {
           iter1.isEmpty && iter2.isEmpty ||
-          (iter1.hasNext &&
-          iter2.hasNext &&
-          iter1.next().equals(iter2.next()) &&
-          areEqual(iter1, iter2))
+          (
+            iter1.hasNext &&
+            iter2.hasNext &&
+            iter1.next().equals(iter2.next()) &&
+            areEqual(iter1, iter2)
+          )
         }
 
         areEqual(elementIterator, that.elementIterator)

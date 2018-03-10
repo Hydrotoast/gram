@@ -20,7 +20,7 @@ package object tensor {
     * @param ordinalRanges The ordinal ranges.
     * @return The cartesian range.
     */
-  def range(ordinalRanges: OrdinalRange*): CartesianRange = CartesianRange.of(ordinalRanges: _*)
+  def range(ordinalRanges: CoordinateMap*): SubscriptMap = SubscriptMap.of(ordinalRanges: _*)
 
   /**
     * Given an end index, creates an ordinal range [0, end).
