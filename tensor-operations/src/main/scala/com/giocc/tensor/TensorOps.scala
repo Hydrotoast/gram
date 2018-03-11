@@ -1,6 +1,4 @@
-package com.giocc.tensor.dense
-
-import com.giocc.tensor.{LinearIndexing, LinearIndices, Shape, SubscriptIndexing, Subscripts}
+package com.giocc.tensor
 
 import scala.{specialized => sp}
 

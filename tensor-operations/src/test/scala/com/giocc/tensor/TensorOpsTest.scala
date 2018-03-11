@@ -1,12 +1,14 @@
-package com.giocc.tensor.dense
+package com.giocc.tensor
 
-import com.giocc.tensor.Shape
+import com.giocc.tensor.dense.Tensor
 import org.scalatest.FunSuite
 import org.scalatest.Matchers._
 
-import com.giocc.tensor._
-
 class TensorOpsTest extends FunSuite {
+  implicit def mkTensorOps[A](tensor: Tensor[A]): TensorOps[A] = {
+    new TensorOps[A](tensor)
+  }
+
   test("TensorOps should assign") {
     val a = Tensor.zeros[Int](Shape.of(3, 2))
     val b = Tensor.ones[Int](Shape.of(3, 2))
