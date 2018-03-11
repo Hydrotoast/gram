@@ -52,11 +52,11 @@ trait Tensor[@sp A] {
   /**
     * The optimal style of indexing.
     */
-  def indexStyle: IndexStyle
+  private[tensor] def indexStyle: IndexStyle
 
-  def iterator: Iterator[A]
+  private[tensor] def iterator: Iterator[A]
 
-  def toArray[B >: A](implicit ev: ClassTag[B]): Array[B] = {
+  private[tensor] def toArray[B >: A](implicit ev: ClassTag[B]): Array[B] = {
     iterator.toArray
   }
 

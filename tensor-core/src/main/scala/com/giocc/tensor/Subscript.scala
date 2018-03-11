@@ -12,10 +12,10 @@ sealed trait Subscript {
     */
   def rank: Int
 
-  def hasNext: Boolean
-  def next(): Int
+  private[tensor] def hasNext: Boolean
+  private[tensor] def next(): Int
 
-  def toArray: Array[Int] = {
+  private[tensor] def toArray: Array[Int] = {
     val result = new Array[Int](rank)
     var dimension = 0
     while (dimension < rank) {

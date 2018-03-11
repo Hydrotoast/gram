@@ -23,7 +23,7 @@ class Shape(
     * @param dimension The dimension.
     * @return The size of the dimension.
     */
-  def apply(dimension: Int): Int = _sizes(dimension)
+  private[tensor] def apply(dimension: Int): Int = _sizes(dimension)
 
   /**
     * The product of the sizes of each dimension. Useful for allocating dense arrays. This operation is O(N).
