@@ -5,7 +5,7 @@ import com.giocc.tensor._
 import scala.{specialized => sp}
 
 /**
-  * Represents a view of a tensor e.g. a vector slice of a matrix.
+  * A view of a tensor e.g. a vector slice of a matrix.
   *
   * @param _base  The base tensor to index from.
   * @param _subscriptMap The cartesian range used to generate the view.
@@ -21,52 +21,42 @@ private[tensor] class DenseTensorView[@sp A](
     _shape
   }
 
-  override def apply(ind: Int): A = {
-    val coordinateIterator = _shape.coordinateIteratorOf(ind)
-    val subscriptMappedIterator = _subscriptMap.map(coordinateIterator)
-    val index = subscriptMappedIterator.toIndex(_base.shape)
-    _base(index)
+  override def apply(index: Int): A = {
+    val subscript = Subscript.fromLinearIndex(index, _shape)
+    val baseSubscript = _subscriptMap.map(subscript)
+    val baseIndex = LinearIndex.fromSubscript(baseSubscript, _base.shape)
+    _base(baseIndex)
   }
 
-  override def update(ind: Int, value: A): Unit = {
-    val coordinateIterator = _shape.coordinateIteratorOf(ind)
-    val subscriptMappedIterator = _subscriptMap.map(coordinateIterator)
-    val index = subscriptMappedIterator.toIndex(_base.shape)
-    _base.update(index, value)
+  override def update(index: Int, value: A): Unit = {
+    val subscript = Subscript.fromLinearIndex(index, _shape)
+    val baseSubscript = _subscriptMap.map(subscript)
+    val baseIndex = LinearIndex.fromSubscript(baseSubscript, _base.shape)
+    _base.update(baseIndex, value)
   }
 
-  override def apply(sub: Subscript): A = {
-    val coordinateIterator = sub.coordinateIterator
-    val subscriptMappedIterator = _subscriptMap.map(coordinateIterator)
-    val index = subscriptMappedIterator.toIndex(_base.shape)
-    _base(index)
+  override def apply(subscript: Subscript): A = {
+    val baseSubscript = _subscriptMap.map(subscript)
+    val baseIndex = LinearIndex.fromSubscript(baseSubscript, _base.shape)
+    _base(baseIndex)
   }
 
-  override def update(sub: Subscript, value: A): Unit = {
-    val coordinateIterator = sub.coordinateIterator
-    val rangedMappedIterator = _subscriptMap.map(coordinateIterator)
-    val index = rangedMappedIterator.toIndex(_base.shape)
-    _base.update(index, value)
+  override def update(subscript: Subscript, value: A): Unit = {
+    val baseSubscript = _subscriptMap.map(subscript)
+    val baseIndex = LinearIndex.fromSubscript(baseSubscript, _base.shape)
+    _base.update(baseIndex, value)
   }
 
   override def elementIterator: Iterator[A] = {
-    _shape.subscriptIterator
-      .map(_.coordinateIterator)
+    Subscripts
+      .fromShape(_shape)
+      .iterator
       .map(_subscriptMap.map)
-      .map(_.toIndex(_base.shape))
+      .map(LinearIndex.fromSubscript(_, _base.shape))
       .map(apply)
   }
 
   override def indexStyle: IndexStyle = {
     SubscriptIndexing
-  }
-}
-
-object DenseTensorView {
-  def of[@sp A](
-    tensor: Tensor[A],
-    subscriptMap: SubscriptMap
-  ): DenseTensorView[A] = {
-    new DenseTensorView[A](tensor, subscriptMap)
   }
 }

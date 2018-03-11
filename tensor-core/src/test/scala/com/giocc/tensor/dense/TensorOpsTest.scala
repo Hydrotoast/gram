@@ -21,7 +21,6 @@ class TensorOpsTest extends FunSuite {
     val a = Tensor.zeros[Int](Shape.of(3, 2))
     val b = Tensor.ones[Int](Shape.of(3, 2, 2))
 
-
     a := b.view(range(zeroTo(3), zeroTo(2), point(0)))
 
     val expected = Tensor.ones[Int](Shape.of(3, 2))
@@ -50,7 +49,7 @@ class TensorOpsTest extends FunSuite {
     }
   }
 
-  test("TensorOps should not assign with tensors of different order") {
+  test("TensorOps should not assign with tensors of different rank") {
     val a = Tensor.zeros[Int](Shape.of(3, 2))
     val b = Tensor.ones[Int](Shape.of(3, 2, 4))
 
@@ -78,7 +77,7 @@ class TensorOpsTest extends FunSuite {
     }
   }
 
-  test("TensorOps should not add with tensors of different order") {
+  test("TensorOps should not add with tensors of different rank") {
     val a = Tensor.zeros[Int](Shape.of(3, 2))
     val b = Tensor.ones[Int](Shape.of(3, 2, 4))
 
@@ -86,7 +85,6 @@ class TensorOpsTest extends FunSuite {
       a += b
     }
   }
-
 
   test("TensorOps should subtract") {
     val a = Tensor.ones[Int](Shape.of(3, 2))
@@ -107,7 +105,7 @@ class TensorOpsTest extends FunSuite {
     }
   }
 
-  test("TensorOps should not subtract with tensors of different order") {
+  test("TensorOps should not subtract with tensors of different rank") {
     val a = Tensor.ones[Int](Shape.of(3, 2))
     val b = Tensor.zeros[Int](Shape.of(3, 2, 4))
 

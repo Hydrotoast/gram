@@ -1,13 +1,12 @@
-package com.giocc.tensor.iterator
+package com.giocc.tensor
 
-import com.giocc.tensor.{Shape, Subscript}
 import org.scalatest.FunSuite
 import org.scalatest.Matchers._
 
-class SubscriptIteratorTest extends FunSuite {
-  test("SusbcriptIterator should iterator over subscripts across multiple dimensions") {
+class SubscriptsTest extends FunSuite {
+  test("Subscripts should have an iterator over subscripts in a shape") {
     val shape = Shape.of(3, 2)
-    val subscriptIterator = shape.subscriptIterator
+    val subscriptIterator = Subscripts.fromShape(shape).iterator
 
     // Subscript iteration should be equivalent to multi-dimensional iteration.
     subscriptIterator.hasNext shouldBe true

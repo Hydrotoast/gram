@@ -3,14 +3,14 @@ package com.giocc.tensor
 /**
   * Represents the indexing style of a tensor.
   */
-trait IndexStyle
+private[tensor] sealed trait IndexStyle
 
 /**
   * Optimal indexing performed by a linear index.
   */
-object LinearIndexing extends IndexStyle
+private[tensor] object LinearIndexing extends IndexStyle
 
 /**
   * Optimal indexing perform a subscript index.
   */
-object SubscriptIndexing extends IndexStyle
+private[tensor] object SubscriptIndexing extends IndexStyle

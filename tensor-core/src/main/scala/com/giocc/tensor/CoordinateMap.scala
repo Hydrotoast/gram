@@ -1,14 +1,14 @@
 package com.giocc.tensor
 
 /**
-  * A monotonic map from the discrete interval [0, domainSize) to some discrete range.
+  * A map from the discrete interval [0, domainSize) to some discrete range.
   */
-sealed trait CoordinateMap {
+private[tensor] sealed trait CoordinateMap {
 
   /**
     * The number of distinct, valid elements in the domain.
     */
-  private[tensor] def domainSize: Int
+  def domainSize: Int
 
   /**
     * True if the range is a single point i.e. the map is a constant function.
@@ -32,11 +32,11 @@ sealed trait CoordinateMap {
 }
 
 /**
-  * Represents a monotonic function from [0, domainSize) to [0, end).
+  * A linear function from [0, end) to [0, end).
   *
   * @param end The exclusive end of the range.
   */
-final case class ZeroTo(
+private[tensor] final case class ZeroTo(
   end: Int
 ) extends CoordinateMap {
   require(end > 0, s"end must be positive to produce a valid range: end=$end")
@@ -47,12 +47,12 @@ final case class ZeroTo(
 }
 
 /**
-  * Represents a monotonic function from [0, domainSize) to [start, end).
+  * An affine function from [0, domainSize) to [start, end).
   *
   * @param start The inclusive start of the range.
   * @param end   The exclusive end of the range.
   */
-final case class Slice(
+private[tensor] final case class Slice(
   start: Int,
   end: Int
 ) extends CoordinateMap {
@@ -64,13 +64,13 @@ final case class Slice(
 }
 
 /**
-  * Represents a monotonic function from [0, domainSize) to [start, end) with steps in-between.
+  * An affine function from [0, domainSize) to [start, end) with steps in-between.
   *
   * @param start The inclusive start of the range.
   * @param end   The exclusive end of the range.
   * @param step  The step between elements of the range.
   */
-final case class Step(
+private[tensor] final case class Step(
   start: Int,
   end: Int,
   step: Int
@@ -84,11 +84,11 @@ final case class Step(
 }
 
 /**
-  * Represents a mapping to a single point. This is always a singleton range.
+  * A mapping to a single point. This is always a singleton range.
   *
   * @param singleton The point to the map to.
   */
-final case class Point(
+private[tensor] final case class Point(
   singleton: Int
 ) extends CoordinateMap {
   require(singleton >= 0, s"point should be non-negative to be valid: point=$singleton")

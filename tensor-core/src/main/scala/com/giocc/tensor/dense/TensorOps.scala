@@ -1,6 +1,6 @@
 package com.giocc.tensor.dense
 
-import com.giocc.tensor.{LinearIndexing, SubscriptIndexing}
+import com.giocc.tensor.{LinearIndexing, LinearIndices, SubscriptIndexing, Subscripts}
 
 import scala.{specialized => sp}
 
@@ -10,7 +10,7 @@ import scala.{specialized => sp}
   * @param underlying The underlying tensor.
   * @tparam A The type of the elements of the tensor.
   */
-class TensorOps[@sp A](
+private[tensor] class TensorOps[@sp A](
   underlying: Tensor[A]
 ) {
 
@@ -29,12 +29,12 @@ class TensorOps[@sp A](
     val thatIter = that.elementIterator
     underlying.indexStyle match {
       case LinearIndexing =>
-        val indIter = underlying.shape.linearIndexIterator
+        val indIter = LinearIndices.fromShape(underlying.shape).iterator
         while (indIter.hasNext && thatIter.hasNext) {
           underlying.update(indIter.next(), thatIter.next())
         }
       case SubscriptIndexing =>
-        val indIter = underlying.shape.subscriptIterator
+        val indIter = Subscripts.fromShape(underlying.shape).iterator
         while (indIter.hasNext && thatIter.hasNext) {
           underlying.update(indIter.next(), thatIter.next())
         }
@@ -58,12 +58,12 @@ class TensorOps[@sp A](
     val thatIter = that.elementIterator
     underlying.indexStyle match {
       case LinearIndexing =>
-        val indIter = underlying.shape.linearIndexIterator
+        val indIter = LinearIndices.fromShape(underlying.shape).iterator
         while (indIter.hasNext && thatIter.hasNext) {
           underlying.update(indIter.next(), num.plus(thisIter.next(), thatIter.next()))
         }
       case SubscriptIndexing =>
-        val indIter = underlying.shape.subscriptIterator
+        val indIter = Subscripts.fromShape(underlying.shape).iterator
         while (indIter.hasNext && thatIter.hasNext) {
           underlying.update(indIter.next(), num.plus(thisIter.next(), thatIter.next()))
         }
@@ -87,12 +87,12 @@ class TensorOps[@sp A](
     val thatIter = that.elementIterator
     underlying.indexStyle match {
       case LinearIndexing =>
-        val indIter = underlying.shape.linearIndexIterator
+        val indIter = LinearIndices.fromShape(underlying.shape).iterator
         while (indIter.hasNext && thatIter.hasNext) {
           underlying.update(indIter.next(), num.minus(thisIter.next(), thatIter.next()))
         }
       case SubscriptIndexing =>
-        val indIter = underlying.shape.subscriptIterator
+        val indIter = Subscripts.fromShape(underlying.shape).iterator
         while (indIter.hasNext && thatIter.hasNext) {
           underlying.update(indIter.next(), num.minus(thisIter.next(), thatIter.next()))
         }
@@ -101,7 +101,7 @@ class TensorOps[@sp A](
   }
 }
 
-object TensorOps {
+private[tensor] object TensorOps {
   def of[@sp A](underlying: Tensor[A]): TensorOps[A] = {
     new TensorOps[A](underlying)
   }

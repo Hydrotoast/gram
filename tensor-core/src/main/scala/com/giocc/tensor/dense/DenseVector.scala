@@ -5,7 +5,7 @@ import com.giocc.tensor.{IndexStyle, LinearIndexing, Shape, Subscript}
 import scala.{specialized => sp}
 
 /**
-  * Represents a dense matrix of a given size over an element type.
+  * A dense matrix of a given size over an element type.
   *
   * @param _size The size of the vector.
   * @param _data The underlying data storage of the tensor.
@@ -19,22 +19,24 @@ private[tensor] class DenseVector[@sp A](
     Shape.of(_size)
   }
 
-  override def apply(ind: Int): A = {
-    _data(ind)
+  override def apply(index: Int): A = {
+    _data(index)
   }
 
-  override def update(ind: Int, value: A): Unit = {
-    _data(ind) = value
+  override def update(index: Int, value: A): Unit = {
+    _data(index) = value
   }
 
-  override def apply(sub: Subscript): A = {
-    require(sub.order == 1)
-    _data(sub(0))
+  override def apply(subscript: Subscript): A = {
+    require(subscript.rank == 1)
+    val index = subscript.next()
+    _data(index)
   }
 
-  override def update(sub: Subscript, value: A): Unit = {
-    require(sub.order == 1)
-    _data(sub(0)) = value
+  override def update(subscript: Subscript, value: A): Unit = {
+    require(subscript.rank == 1)
+    val index = subscript.next()
+    _data(index) = value
   }
 
   override def elementIterator: Iterator[A] = {

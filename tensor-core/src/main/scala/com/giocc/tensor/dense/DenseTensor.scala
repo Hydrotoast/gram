@@ -5,7 +5,7 @@ import com.giocc.tensor._
 import scala.{specialized => sp}
 
 /**
-  * Represents a dense tensor of a given shape over an element type.
+  * A dense tensor of a given shape over an element type.
   *
   * @param _shape The shape of the tensor.
   * @param _data  The underlying data storage of the tensor.
@@ -28,14 +28,12 @@ private[tensor] class DenseTensor[@sp A](
   }
 
   override def apply(sub: Subscript): A = {
-    val subIterator = sub.coordinateIterator
-    val index = subIterator.toIndex(_shape)
+    val index = LinearIndex.fromSubscript(sub, _shape)
     _data(index)
   }
 
   override def update(sub: Subscript, value: A): Unit = {
-    val subIterator = sub.coordinateIterator
-    val index = subIterator.toIndex(_shape)
+    val index = LinearIndex.fromSubscript(sub, _shape)
     _data(index) = value
   }
 
