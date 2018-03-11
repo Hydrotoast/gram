@@ -1,18 +1,15 @@
 package com.giocc.tensor.dense
 
-import com.giocc.tensor.{LinearIndexing, LinearIndices, SubscriptIndexing, Subscripts}
+import com.giocc.tensor.{LinearIndexing, LinearIndices, Shape, SubscriptIndexing, Subscripts}
 
 import scala.{specialized => sp}
 
 /**
-  * Represents binary tensor operations on an underlying tensor.
+  * Binary tensor operations on an underlying tensor.
   *
-  * @param underlying The underlying tensor.
   * @tparam A The type of the elements of the tensor.
   */
-private[tensor] class TensorOps[@sp A](
-  underlying: Tensor[A]
-) {
+private[tensor] class TensorOps[@sp A](underlying: Tensor[A]) {
 
   /**
     * Given a tensor, assigns the elements of the other tensor to the underlying tensor.
@@ -21,24 +18,14 @@ private[tensor] class TensorOps[@sp A](
     * @return the updated underlying tensor.
     */
   def :=(that: Tensor[A]): Tensor[A] = {
-    require(
-      underlying.shape.equals(that.shape),
-      s"Cannot operate on tensors of different shapes: shape1=${underlying.shape} and shape2=${that.shape}"
-    )
+    checkShapes(that.shape)
 
-    val thatIter = that.iterator
-    underlying.indexStyle match {
-      case LinearIndexing =>
-        val indIter = LinearIndices.fromShape(underlying.shape).iterator
-        while (indIter.hasNext && thatIter.hasNext) {
-          underlying.update(indIter.next(), thatIter.next())
-        }
-      case SubscriptIndexing =>
-        val indIter = Subscripts.fromShape(underlying.shape).iterator
-        while (indIter.hasNext && thatIter.hasNext) {
-          underlying.update(indIter.next(), thatIter.next())
-        }
+    val it = that.iterator
+
+    update {
+      it.next()
     }
+
     underlying
   }
 
@@ -49,25 +36,15 @@ private[tensor] class TensorOps[@sp A](
     * @return the updated underlying tensor.
     */
   def +=(that: Tensor[A])(implicit num: Numeric[A]): Tensor[A] = {
-    require(
-      underlying.shape.equals(that.shape),
-      s"Cannot operate on tensors of different shapes: shape1=${underlying.shape} and shape2=${that.shape}"
-    )
+    checkShapes(that.shape)
 
-    val thisIter = underlying.iterator
-    val thatIter = that.iterator
-    underlying.indexStyle match {
-      case LinearIndexing =>
-        val indIter = LinearIndices.fromShape(underlying.shape).iterator
-        while (indIter.hasNext && thatIter.hasNext) {
-          underlying.update(indIter.next(), num.plus(thisIter.next(), thatIter.next()))
-        }
-      case SubscriptIndexing =>
-        val indIter = Subscripts.fromShape(underlying.shape).iterator
-        while (indIter.hasNext && thatIter.hasNext) {
-          underlying.update(indIter.next(), num.plus(thisIter.next(), thatIter.next()))
-        }
+    val it1 = underlying.iterator
+    val it2 = that.iterator
+
+    update {
+      num.plus(it1.next(), it2.next())
     }
+
     underlying
   }
 
@@ -78,31 +55,47 @@ private[tensor] class TensorOps[@sp A](
     * @return the updated underlying tensor.
     */
   def -=(that: Tensor[A])(implicit num: Numeric[A]): Tensor[A] = {
-    require(
-      underlying.shape.equals(that.shape),
-      s"Cannot operate on tensors of different shapes: shape1=${underlying.shape} and shape2=${that.shape}"
-    )
+    checkShapes(that.shape)
 
-    val thisIter = underlying.iterator
-    val thatIter = that.iterator
+    val it1 = underlying.iterator
+    val it2 = that.iterator
+
+    update {
+      num.minus(it1.next(), it2.next())
+    }
+
+    underlying
+  }
+
+  /**
+    * Given a code block, update each element of the underlying tensor by applying the code block.
+    *
+    * @param block The code block.
+    */
+  private def update(block: => A): Unit = {
     underlying.indexStyle match {
       case LinearIndexing =>
         val indIter = LinearIndices.fromShape(underlying.shape).iterator
-        while (indIter.hasNext && thatIter.hasNext) {
-          underlying.update(indIter.next(), num.minus(thisIter.next(), thatIter.next()))
+        while (indIter.hasNext) {
+          underlying.update(indIter.next(), block)
         }
       case SubscriptIndexing =>
         val indIter = Subscripts.fromShape(underlying.shape).iterator
-        while (indIter.hasNext && thatIter.hasNext) {
-          underlying.update(indIter.next(), num.minus(thisIter.next(), thatIter.next()))
+        while (indIter.hasNext) {
+          underlying.update(indIter.next(), block)
         }
     }
-    underlying
   }
-}
 
-private[tensor] object TensorOps {
-  def of[@sp A](underlying: Tensor[A]): TensorOps[A] = {
-    new TensorOps[A](underlying)
+  /**
+    * Given a shape, checks that the shape matches the underlying shape.
+    *
+    * @param shape The shape to check.
+    */
+  private def checkShapes(shape: Shape): Unit = {
+    require(
+      underlying.shape.equals(shape),
+      s"Cannot operate on tensors of different shapes: shape1=${underlying.shape} and shape2=$shape"
+    )
   }
 }

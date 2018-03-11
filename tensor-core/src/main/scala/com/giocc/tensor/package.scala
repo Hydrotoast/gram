@@ -64,5 +64,5 @@ package object tensor {
     * @tparam A The elemenent type of the tensor.
     * @return a tensor with binary tensor operations.
     */
-  implicit def mkTensorOps[@sp A](tensor: Tensor[A]): TensorOps[A] = TensorOps.of(tensor)
+  implicit def mkTensorOps[@sp A](tensor: Tensor[A]): TensorOps[A] = new TensorOps[A](tensor)
 }
