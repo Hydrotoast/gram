@@ -1,7 +1,5 @@
 package com.giocc.tensor
 
-import com.giocc.tensor.dense.DenseTensorView
-
 import scala.reflect.ClassTag
 import scala.{specialized => sp}
 
@@ -58,16 +56,6 @@ trait Tensor[@sp A] {
 
   private[tensor] def toArray[B >: A](implicit ev: ClassTag[B]): Array[B] = {
     iterator.toArray
-  }
-
-  /**
-    * Given a subscript map, constructs a tensor view that maps its subscripts using the subscript map.
-    *
-    * @param subscriptMap The subscript map.
-    * @return The tensor view.
-    */
-  def view(subscriptMap: SubscriptMap): DenseTensorView[A] = {
-    new DenseTensorView(this, subscriptMap)
   }
 
   override def equals(o: Any): Boolean = {

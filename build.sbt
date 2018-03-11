@@ -36,7 +36,8 @@ lazy val root = project
   )
   .aggregate(
     tensorCore,
-    tensorOperations
+    tensorOperations,
+    tensorViews
   )
 
 lazy val tensorCore = project
@@ -46,6 +47,16 @@ lazy val tensorCore = project
     versionSettings ++
     publishSettings ++
     Seq(name := "tensor-core")
+  )
+
+lazy val tensorViews = project
+  .in(file("tensor-views"))
+  .dependsOn(tensorCore)
+  .settings(
+    commonSettings ++
+    versionSettings ++
+    publishSettings ++
+    Seq(name := "tensor-views")
   )
 
 lazy val tensorOperations = project

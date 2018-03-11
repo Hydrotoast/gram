@@ -1,17 +1,15 @@
-package com.giocc.tensor.dense
-
-import com.giocc.tensor._
+package com.giocc.tensor
 
 import scala.{specialized => sp}
 
 /**
   * A view of a tensor e.g. a vector slice of a matrix.
   *
-  * @param _base  The base tensor to index from.
+  * @param _base         The base tensor to index from.
   * @param _subscriptMap The cartesian range used to generate the view.
   * @tparam A The type of the elements stored in the tensor.
   */
-private[tensor] class DenseTensorView[@sp A](
+private[tensor] class TensorView[@sp A](
   _base: Tensor[A],
   _subscriptMap: SubscriptMap
 ) extends Tensor[A] {
@@ -58,5 +56,14 @@ private[tensor] class DenseTensorView[@sp A](
 
   override def indexStyle: IndexStyle = {
     SubscriptIndexing
+  }
+}
+
+object TensorView {
+  def of[@sp A](tensor: Tensor[A], map: SubscriptMap): TensorView[A] = {
+    tensor match {
+      // Optimizes cases based on the underlying tensor
+      case _ => new TensorView[A](tensor, map)
+    }
   }
 }
