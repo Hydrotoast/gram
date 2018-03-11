@@ -39,7 +39,7 @@ private[tensor] class DenseVector[@sp A](
     _data(index) = value
   }
 
-  override def elementIterator: Iterator[A] = {
+  override def iterator: Iterator[A] = {
     _data.iterator
   }
 

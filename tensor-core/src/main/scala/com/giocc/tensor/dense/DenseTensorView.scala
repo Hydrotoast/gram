@@ -47,7 +47,7 @@ private[tensor] class DenseTensorView[@sp A](
     _base.update(baseIndex, value)
   }
 
-  override def elementIterator: Iterator[A] = {
+  override def iterator: Iterator[A] = {
     Subscripts
       .fromShape(_shape)
       .iterator

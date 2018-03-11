@@ -10,7 +10,7 @@ import scala.{specialized => sp}
   *
   * @tparam A The type of the elements stored in the tensor.
   */
-trait Tensor[@sp A] {
+trait Tensor[@sp A] extends Iterable[A] {
 
   /**
     * The shape of the tensor.
@@ -50,21 +50,9 @@ trait Tensor[@sp A] {
   def update(subscript: Subscript, value: A): Unit
 
   /**
-    * Iterates over the elements of the tensor.
-    */
-  def elementIterator: Iterator[A]
-
-  /**
     * The optimal style of indexing.
     */
   def indexStyle: IndexStyle
-
-  /**
-    * Constructs a dense array representation of the tensor.
-    */
-  def toArray(implicit ev: ClassTag[A]): Array[A] = {
-    elementIterator.toArray
-  }
 
   /**
     * Given a subscript map, constructs a tensor view that maps its subscripts using the subscript map.
@@ -79,8 +67,8 @@ trait Tensor[@sp A] {
   override def equals(o: Any): Boolean = {
     o match {
       case that: Tensor[A] =>
-        val it1 = elementIterator
-        val it2 = that.elementIterator
+        val it1 = iterator
+        val it2 = that.iterator
         while (it1.hasNext && it2.hasNext) if (it1.next != it2.next) return false
         !it1.hasNext && !it2.hasNext
       case _ =>
@@ -89,10 +77,10 @@ trait Tensor[@sp A] {
   }
 
   override def hashCode(): Int = {
-    val iterator = elementIterator
+    val it = iterator
     var h = 1
-    while (iterator.hasNext) {
-      val elem = iterator.next()
+    while (it.hasNext) {
+      val elem = it.next()
       h = 31 * h + (if (elem == null) 0 else elem.hashCode())
     }
     h

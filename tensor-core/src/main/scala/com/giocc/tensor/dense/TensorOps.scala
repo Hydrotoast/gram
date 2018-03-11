@@ -26,7 +26,7 @@ private[tensor] class TensorOps[@sp A](
       s"Cannot operate on tensors of different shapes: shape1=${underlying.shape} and shape2=${that.shape}"
     )
 
-    val thatIter = that.elementIterator
+    val thatIter = that.iterator
     underlying.indexStyle match {
       case LinearIndexing =>
         val indIter = LinearIndices.fromShape(underlying.shape).iterator
@@ -54,8 +54,8 @@ private[tensor] class TensorOps[@sp A](
       s"Cannot operate on tensors of different shapes: shape1=${underlying.shape} and shape2=${that.shape}"
     )
 
-    val thisIter = underlying.elementIterator
-    val thatIter = that.elementIterator
+    val thisIter = underlying.iterator
+    val thatIter = that.iterator
     underlying.indexStyle match {
       case LinearIndexing =>
         val indIter = LinearIndices.fromShape(underlying.shape).iterator
@@ -83,8 +83,8 @@ private[tensor] class TensorOps[@sp A](
       s"Cannot operate on tensors of different shapes: shape1=${underlying.shape} and shape2=${that.shape}"
     )
 
-    val thisIter = underlying.elementIterator
-    val thatIter = that.elementIterator
+    val thisIter = underlying.iterator
+    val thatIter = that.iterator
     underlying.indexStyle match {
       case LinearIndexing =>
         val indIter = LinearIndices.fromShape(underlying.shape).iterator
