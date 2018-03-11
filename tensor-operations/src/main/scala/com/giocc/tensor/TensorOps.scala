@@ -1,5 +1,8 @@
 package com.giocc.tensor
 
+import spire.math.Numeric
+import spire.implicits._
+
 import scala.{specialized => sp}
 
 /**
@@ -40,7 +43,7 @@ private[tensor] class TensorOps[@sp A](underlying: Tensor[A]) {
     val it2 = that.iterator
 
     update {
-      num.plus(it1.next(), it2.next())
+      it1.next() + it2.next()
     }
 
     underlying
@@ -59,7 +62,7 @@ private[tensor] class TensorOps[@sp A](underlying: Tensor[A]) {
     val it2 = that.iterator
 
     update {
-      num.minus(it1.next(), it2.next())
+      it1.next() - it2.next()
     }
 
     underlying

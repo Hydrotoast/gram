@@ -2,6 +2,7 @@ package com.giocc.tensor.dense
 
 import com.giocc.tensor._
 
+import spire.math.Numeric
 import scala.reflect.ClassTag
 import scala.{specialized => sp}
 
