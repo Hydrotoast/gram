@@ -10,7 +10,7 @@ import scala.{specialized => sp}
   *
   * @tparam A The type of the elements stored in the tensor.
   */
-trait Tensor[@sp A] extends Iterable[A] {
+trait Tensor[@sp A] {
 
   /**
     * The shape of the tensor.
@@ -53,6 +53,12 @@ trait Tensor[@sp A] extends Iterable[A] {
     * The optimal style of indexing.
     */
   def indexStyle: IndexStyle
+
+  def iterator: Iterator[A]
+
+  def toArray[B >: A](implicit ev: ClassTag[B]): Array[B] = {
+    iterator.toArray
+  }
 
   /**
     * Given a subscript map, constructs a tensor view that maps its subscripts using the subscript map.

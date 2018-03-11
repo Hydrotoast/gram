@@ -77,7 +77,7 @@ private[tensor] class SubscriptMap(
     * @param _iterator The coordinate iterator to map over.
     */
   private class SubscriptMapCoordinateIterator(
-    _iterator: Iterator[Int]
+    _iterator: Subscript
   ) extends Iterator[Int] {
     private var _currentDimension: Int = -1
 

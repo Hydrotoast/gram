@@ -5,14 +5,27 @@ import java.util
 /**
   * An N-dimensional point with n coordinates. We call the number of dimensions, N, the rank.
   */
-sealed trait Subscript extends Iterator[Int] {
+sealed trait Subscript {
 
   /**
     * The number of dimensions of this subscript.
     */
   def rank: Int
 
-  override def toString: String = mkString("(", ",", ")")
+  def hasNext: Boolean
+  def next(): Int
+
+  def toArray: Array[Int] = {
+    val result = new Array[Int](rank)
+    var dimension = 0
+    while (dimension < rank) {
+      result(dimension) += next()
+      dimension += 1
+    }
+    result
+  }
+
+  override def toString: String = toArray.mkString("(", ",", ")")
 
   override def equals(other: Any): Boolean = other match {
     case that: Subscript =>
@@ -54,17 +67,6 @@ private[tensor] class LinearIndexSubscript(
   private var _currentDimension = -1
 
   override def rank: Int = _shape.rank
-
-  override def foreach[A](coordinateConsumer: Int => A): Unit = {
-    var dimension = 0
-    var ind = _ind
-    while (dimension < rank) {
-      val coordinate = ind % _shape(dimension)
-      ind /= _shape(dimension)
-      coordinateConsumer(coordinate)
-      dimension += 1
-    }
-  }
 
   override def hasNext: Boolean = {
     _currentDimension < rank - 1
