@@ -8,11 +8,6 @@ package gram.tensor
 private[tensor] class Subscripts(_shape: Shape) extends Iterable[Subscript] {
 
   /**
-    * The number of dimensions in the subscripts.
-    */
-  def rank: Int = _shape.rank
-
-  /**
     * An iterator over the subscripts.
     */
   def iterator: Iterator[Subscript] = {
@@ -26,7 +21,7 @@ private[tensor] class Subscripts(_shape: Shape) extends Iterable[Subscript] {
     private val _length: Int = _shape.length
     private var _item: Int = 0
     private val _coordinates: Array[Int] = {
-      val buffer = new Array[Int](rank)
+      val buffer = new Array[Int](_shape.rank)
       buffer(0) = -1
       buffer
     }

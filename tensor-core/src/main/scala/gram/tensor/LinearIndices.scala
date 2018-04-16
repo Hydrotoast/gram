@@ -6,11 +6,6 @@ package gram.tensor
   */
 private[tensor] class LinearIndices(_shape: Shape) extends Iterable[Int] {
 
-  /**
-    * The number of dimensions of the shape.
-    */
-  def rank: Int = _shape.rank
-
   override def iterator: Iterator[Int] = {
     new LinearIndexIterator()
   }
