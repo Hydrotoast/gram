@@ -1,5 +1,6 @@
 package gram.tensor
 
+import gram.tensor.subscript.{CoordinateIterator, Subscript}
 import org.scalatest.FunSuite
 import org.scalatest.Matchers._
 
@@ -43,11 +44,7 @@ class SubscriptMapTest extends FunSuite {
     val subscriptMap = SubscriptMap.of(ZeroTo(2), Point(3), Slice(4, 6))
     val subscript = Subscript.of(1, 0)
 
-    val outputSubscript = subscriptMap.map(subscript)
-    outputSubscript.hasNext shouldBe true
-    outputSubscript.next() shouldBe 1
-    outputSubscript.next() shouldBe 3
-    outputSubscript.next() shouldBe 4
-    outputSubscript.hasNext shouldBe false
+    val outputSubscript = subscriptMap.map(subscript.iterator)
+    outputSubscript shouldEqual CoordinateIterator.of(1, 3, 4)
   }
 }

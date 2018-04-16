@@ -1,6 +1,7 @@
 package gram.tensor.dense
 
 import gram.tensor._
+import gram.tensor.subscript.Subscript
 
 import scala.{specialized => sp}
 
@@ -29,13 +30,13 @@ private[tensor] class DenseVector[@sp A](
 
   override def apply(subscript: Subscript): A = {
     require(subscript.rank == 1)
-    val index = subscript.next()
+    val index = subscript(0)
     _data(index)
   }
 
   override def update(subscript: Subscript, value: A): Unit = {
     require(subscript.rank == 1)
-    val index = subscript.next()
+    val index = subscript(0)
     _data(index) = value
   }
 

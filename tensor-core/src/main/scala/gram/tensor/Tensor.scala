@@ -1,5 +1,7 @@
 package gram.tensor
 
+import gram.tensor.subscript.Subscript
+
 import scala.reflect.ClassTag
 import scala.{specialized => sp}
 

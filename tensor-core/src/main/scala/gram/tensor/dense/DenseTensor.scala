@@ -1,6 +1,7 @@
 package gram.tensor.dense
 
 import gram.tensor._
+import gram.tensor.subscript.Subscript
 
 import scala.{specialized => sp}
 

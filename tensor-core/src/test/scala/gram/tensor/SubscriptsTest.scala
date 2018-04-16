@@ -1,5 +1,6 @@
 package gram.tensor
 
+import gram.tensor.subscript.{Subscript, Subscripts}
 import org.scalatest.FunSuite
 import org.scalatest.Matchers._
 
@@ -13,7 +14,7 @@ class SubscriptsTest extends FunSuite {
     (0 until 2).foreach { j =>
       (0 until 3).foreach { i =>
         val subscript = subscriptIterator.next()
-        subscript shouldBe Subscript.of(i, j)
+        subscript shouldEqual Subscript.of(i, j)
       }
     }
     subscriptIterator.hasNext shouldBe false

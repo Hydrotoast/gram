@@ -2,6 +2,8 @@ package gram.tensor
 
 import java.util
 
+import gram.tensor.subscript.{CoordinateIterator, Subscript}
+
 /**
   * A monotonic function from an N-dimensional coordinate system to an M-dimensional coordinate system where N <= M.
   * The size of the domain is always defined to be [0, size) for each dimension. This data structure is immutable.
@@ -33,13 +35,13 @@ private[tensor] class SubscriptMap(
     * The shape of the domain of this map.
     */
   def domainShape: Shape = {
-    val domainOrder = domainRank
-    val rangeOrder = rangeRank
+    val _domainRank = domainRank
+    val _rangeRank = rangeRank
 
-    val data = new Array[Int](domainOrder)
+    val data = new Array[Int](_domainRank)
     var i = 0
     var j = 0
-    while (i < rangeOrder) {
+    while (i < _rangeRank) {
       val coordinateMap = _coordinateMaps(i)
       if (!coordinateMap.isConstant) {
         data(j) = coordinateMap.domainSize
@@ -50,14 +52,8 @@ private[tensor] class SubscriptMap(
     Shape.fromArray(data)
   }
 
-  /**
-    * Given a subscript, maps the coordinates to a new coordinate system.
-    *
-    * @param subscript The subscript to map.
-    * @return a new subscript.
-    */
-  def map(subscript: Subscript): Subscript = {
-    Subscript.fromIterator(rangeRank, new SubscriptMapCoordinateIterator(subscript))
+  def map(input: CoordinateIterator): CoordinateIterator = {
+    new Iterator(input)
   }
 
   override def equals(other: Any): Boolean = {
@@ -71,14 +67,9 @@ private[tensor] class SubscriptMap(
     util.Arrays.hashCode(_coordinateMaps.asInstanceOf[Array[Object]])
   }
 
-  /**
-    * Iterates over the subscript mapping of a coordinate iterator.
-    *
-    * @param _iterator The coordinate iterator to map over.
-    */
-  private class SubscriptMapCoordinateIterator(
-    _iterator: Subscript
-  ) extends Iterator[Int] {
+  private final class Iterator(
+    _iterator: CoordinateIterator
+  ) extends CoordinateIterator {
     private var _currentDimension: Int = -1
 
     override def hasNext: Boolean = {

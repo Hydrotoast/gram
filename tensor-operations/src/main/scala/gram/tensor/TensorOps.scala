@@ -1,7 +1,8 @@
 package gram.tensor
 
-import spire.math.Numeric
+import gram.tensor.subscript.Subscripts
 import spire.implicits._
+import spire.math.Numeric
 
 import scala.{specialized => sp}
 

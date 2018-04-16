@@ -1,5 +1,7 @@
 package gram.tensor
 
+import gram.tensor.subscript.{CoordinateIterator, Subscript, Subscripts}
+
 import scala.{specialized => sp}
 
 /**
@@ -21,27 +23,27 @@ private[tensor] class TensorView[@sp A](
 
   override def apply(index: Int): A = {
     val subscript = Subscript.fromLinearIndex(index, _shape)
-    val baseSubscript = _subscriptMap.map(subscript)
-    val baseIndex = LinearIndex.fromSubscript(baseSubscript, _base.shape)
+    val baseSubscript = _subscriptMap.map(subscript.iterator)
+    val baseIndex = LinearIndex.fromCoordinateIterator(baseSubscript, _base.shape)
     _base(baseIndex)
   }
 
   override def update(index: Int, value: A): Unit = {
     val subscript = Subscript.fromLinearIndex(index, _shape)
-    val baseSubscript = _subscriptMap.map(subscript)
-    val baseIndex = LinearIndex.fromSubscript(baseSubscript, _base.shape)
+    val baseSubscript = _subscriptMap.map(subscript.iterator)
+    val baseIndex = LinearIndex.fromCoordinateIterator(baseSubscript, _base.shape)
     _base.update(baseIndex, value)
   }
 
   override def apply(subscript: Subscript): A = {
-    val baseSubscript = _subscriptMap.map(subscript)
-    val baseIndex = LinearIndex.fromSubscript(baseSubscript, _base.shape)
+    val baseSubscript = _subscriptMap.map(subscript.iterator)
+    val baseIndex = LinearIndex.fromCoordinateIterator(baseSubscript, _base.shape)
     _base(baseIndex)
   }
 
   override def update(subscript: Subscript, value: A): Unit = {
-    val baseSubscript = _subscriptMap.map(subscript)
-    val baseIndex = LinearIndex.fromSubscript(baseSubscript, _base.shape)
+    val baseSubscript = _subscriptMap.map(subscript.iterator)
+    val baseIndex = LinearIndex.fromCoordinateIterator(baseSubscript, _base.shape)
     _base.update(baseIndex, value)
   }
 
@@ -49,8 +51,9 @@ private[tensor] class TensorView[@sp A](
     Subscripts
       .fromShape(_shape)
       .iterator
+      .map(_.iterator)
       .map(_subscriptMap.map)
-      .map(LinearIndex.fromSubscript(_, _base.shape))
+      .map(LinearIndex.fromCoordinateIterator(_, _base.shape))
       .map(apply)
   }
 

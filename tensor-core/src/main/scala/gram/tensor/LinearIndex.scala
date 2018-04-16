@@ -1,5 +1,7 @@
 package gram.tensor
 
+import gram.tensor.subscript.{CoordinateIterator, Subscript}
+
 private[tensor] object LinearIndex {
 
   /**
@@ -12,7 +14,25 @@ private[tensor] object LinearIndex {
     var dimension = 0
     var ind = 0
     var stride = 1
-    val coordinateIterator = subscript
+    val coordinateIterator = subscript.iterator
+    while (coordinateIterator.hasNext) {
+      ind += stride * coordinateIterator.next()
+      stride *= shape.apply(dimension)
+      dimension += 1
+    }
+    ind
+  }
+
+  /**
+    * Given a shape, aggregates the remaining coordinates into a cartesian index within the shape.
+    *
+    * @param shape The shape.
+    * @return The cartesian index.
+    */
+  def fromCoordinateIterator(coordinateIterator: CoordinateIterator, shape: Shape): Int = {
+    var dimension = 0
+    var ind = 0
+    var stride = 1
     while (coordinateIterator.hasNext) {
       ind += stride * coordinateIterator.next()
       stride *= shape.apply(dimension)

@@ -1,6 +1,7 @@
 package gram.tensor.dense
 
 import gram.tensor._
+import gram.tensor.subscript.Subscript
 
 import scala.{specialized => sp}
 
@@ -31,15 +32,15 @@ private[tensor] class DenseMatrix[@sp A](
 
   override def apply(subscript: Subscript): A = {
     require(subscript.rank == 2)
-    val column = subscript.next()
-    val row = subscript.next()
+    val column = subscript(0)
+    val row = subscript(1)
     _data(column + _rowSize * row)
   }
 
   override def update(subscript: Subscript, value: A): Unit = {
     require(subscript.rank == 2)
-    val column = subscript.next()
-    val row = subscript.next()
+    val column = subscript(0)
+    val row = subscript(1)
     _data(column + _rowSize * row) = value
   }
 

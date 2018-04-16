@@ -1,4 +1,6 @@
-package gram.tensor
+package gram.tensor.subscript
+
+import gram.tensor.Shape
 
 /**
   * The set of subscripts within a shape.
@@ -11,23 +13,24 @@ private[tensor] class Subscripts(_shape: Shape) extends Iterable[Subscript] {
     * An iterator over the subscripts.
     */
   def iterator: Iterator[Subscript] = {
-    new SubscriptIterator()
+    new SubscriptsIterator
   }
 
   /**
     * Iterates over subscripts.
     */
-  private class SubscriptIterator() extends Iterator[Subscript] {
+  private class SubscriptsIterator extends Iterator[Subscript] {
     private val _length: Int = _shape.length
-    private var _item: Int = 0
+    private var _cell: Int = 0
     private val _coordinates: Array[Int] = {
       val buffer = new Array[Int](_shape.rank)
       buffer(0) = -1
       buffer
     }
+    private val _subscript = Subscript.fromArray(_coordinates)
 
     override def hasNext: Boolean = {
-      _item < _length
+      _cell < _length
     }
 
     override def next(): Subscript = {
@@ -36,8 +39,8 @@ private[tensor] class Subscripts(_shape: Shape) extends Iterable[Subscript] {
       }
 
       updateCoordinates()
-      _item += 1
-      Subscript.fromArray(_coordinates)
+      _cell += 1
+      _subscript
     }
 
     private def updateCoordinates(): Unit = {
