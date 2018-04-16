@@ -47,7 +47,7 @@ private[tensor] class SubscriptMap(
       }
       i += 1
     }
-    new Shape(data)
+    Shape.fromArray(data)
   }
 
   /**

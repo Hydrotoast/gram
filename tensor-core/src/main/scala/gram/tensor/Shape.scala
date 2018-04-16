@@ -1,61 +1,120 @@
 package gram.tensor
 
-import java.util
-
-/**
-  * The size of each dimension of an N-dimensional coordinate system. This data structure is immutable.
-  *
-  * @param _sizes The size of each dimension. Must be non-empty.
-  */
-class Shape(
-  private val _sizes: Array[Int]
-) {
-  require(_sizes.nonEmpty)
+trait Shape extends Iterable[Int] {
 
   /**
     * The number of dimensions.
     */
-  def rank: Int = _sizes.length
+  def rank: Int
 
   /**
-    * Given a dimension, return the size of the dimension.
+    * Returns the size of the given dimension. The size is always positive.
     *
-    * @param dimension The dimension.
-    * @return The size of the dimension.
+    * @param dimension The dimension. Must be non-negative.
+    * @return The size of the given dimension.
     */
-  private[tensor] def apply(dimension: Int): Int = _sizes(dimension)
+  def apply(dimension: Int): Int
 
   /**
-    * The product of the sizes of each dimension. Useful for allocating dense arrays. This operation is O(N).
+    * The product of the sizes of each dimension. Useful for allocating dense
+    * arrays. This operation takes `O(rank)` time.
     */
   def length: Int = {
     var result = 1
-    _sizes.foreach {
+    iterator.foreach {
       result *= _
     }
     result
   }
 
+  /**
+    * True if the given object is equal to this object. They are equal if they
+    * they have the same dimension sizes. If they are the same object reference,
+    * then they must have the same dimension sizes.
+    *
+    * @param o The object to compare to.
+    * @return true if the given object is equal to this object.
+    */
   override def equals(o: Any): Boolean = {
     o match {
-      case that: Shape => _sizes.sameElements(that._sizes)
+      case that: Shape => eq(that) || iterator.sameElements(that.iterator)
       case _ => false
     }
   }
 
-  override def hashCode(): Int = {
-    util.Arrays.hashCode(_sizes)
+  /**
+    * Iterates over the size of each dimension.
+    */
+  def iterator: Iterator[Int] = {
+    new DimensionSizeIterator
   }
+
+  private final class DimensionSizeIterator extends Iterator[Int] {
+    private val _rank = rank
+    private var _currentDimension = 0
+
+    override def hasNext: Boolean = {
+      _currentDimension < _rank
+    }
+
+    override def next(): Int = {
+      if (!hasNext) {
+        throw new IllegalStateException("Iterator does not have a next element")
+      }
+
+      // Retrieve the size of the current dimension
+      val size = Shape.this.apply(_currentDimension)
+
+      // Move to the next dimension
+      _currentDimension += 1
+
+      // Return the size of the requested dimension
+      size
+    }
+  }
+
 }
 
 object Shape {
 
+  class ArrayShape(
+    private val _sizes: Array[Int]
+  ) extends Shape {
+    require(_sizes.nonEmpty)
+
+    override def rank: Int = {
+      _sizes.length
+    }
+
+    override def apply(dimension: Int): Int = {
+      _sizes(dimension)
+    }
+
+  }
+
   /**
-    * Given an array of sizes for each dimension, constructs a shape.
-    * @param sizes The size of each dimension.
-    * @return the shape.
+    * Constructs a shape object given a list of sizes for each dimension.
+    *
+    * @param sizes The list of sizes for each dimension. Must have at least one
+    *              size.
+    * @return The shape object.
     */
   def of(sizes: Int*): Shape = {
-    new Shape(sizes.toArray)
+    require(sizes.nonEmpty, "Must have at least on size")
+    new ArrayShape(sizes.toArray)
+  }
+
+  /**
+    * Constructs a shape object given an array of sizes for each dimension. The
+    * object will own the array such that changes in the array will be reflected
+    * in the object.
+    *
+    * @param sizes The array of sizes for each dimension. Must have at least one
+    *              size.
+    * @return The shape object.
+    */
+  def fromArray(sizes: Array[Int]): Shape = {
+    require(sizes.nonEmpty, "Must have at least on size")
+    new ArrayShape(sizes)
   }
 }
