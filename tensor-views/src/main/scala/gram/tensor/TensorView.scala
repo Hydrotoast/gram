@@ -1,5 +1,6 @@
 package gram.tensor
 
+import gram.tensor.linearindex.LinearIndex
 import gram.tensor.subscript.{CoordinateIterator, Subscript, Subscripts}
 
 import scala.{specialized => sp}
@@ -49,8 +50,7 @@ private[tensor] class TensorView[@sp A](
 
   override def iterator: Iterator[A] = {
     Subscripts
-      .fromShape(_shape)
-      .iterator
+      .iterateFrom(_shape)
       .map(_.iterator)
       .map(_subscriptMap.map)
       .map(LinearIndex.fromCoordinateIterator(_, _base.shape))

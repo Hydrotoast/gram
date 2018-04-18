@@ -1,5 +1,6 @@
 package gram.tensor
 
+import gram.tensor.linearindex.LinearIndices
 import gram.tensor.subscript.Subscripts
 import spire.implicits._
 import spire.math.Numeric
@@ -77,12 +78,12 @@ private[tensor] class TensorOps[@sp A](underlying: Tensor[A]) {
   private def update(block: => A): Unit = {
     underlying.indexStyle match {
       case LinearIndexing =>
-        val indIter = LinearIndices.fromShape(underlying.shape).iterator
+        val indIter = LinearIndices.iterateFrom(underlying.shape)
         while (indIter.hasNext) {
           underlying.update(indIter.next(), block)
         }
       case SubscriptIndexing =>
-        val indIter = Subscripts.fromShape(underlying.shape).iterator
+        val indIter = Subscripts.iterateFrom(underlying.shape)
         while (indIter.hasNext) {
           underlying.update(indIter.next(), block)
         }

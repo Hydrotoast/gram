@@ -1,5 +1,6 @@
-package gram.tensor
+package gram.tensor.linearindex
 
+import gram.tensor.Shape
 import gram.tensor.subscript.CoordinateIterator
 import org.scalatest.FunSuite
 import org.scalatest.Matchers._

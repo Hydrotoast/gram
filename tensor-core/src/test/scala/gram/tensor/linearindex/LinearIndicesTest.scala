@@ -1,5 +1,6 @@
-package gram.tensor
+package gram.tensor.linearindex
 
+import gram.tensor.Shape
 import org.scalatest.FunSuite
 import org.scalatest.Matchers._
 
@@ -7,7 +8,7 @@ class LinearIndicesTest extends FunSuite {
 
   test("LinearIndices should iterate over valid linear indices in a shape") {
     val shape = Shape.of(3, 2)
-    val linearIndexIterator = LinearIndices.fromShape(shape).iterator
+    val linearIndexIterator = LinearIndices.iterateFrom(shape)
 
     // Lienar index iteration should be equivalent to column-major iteration.
     linearIndexIterator.hasNext shouldBe true

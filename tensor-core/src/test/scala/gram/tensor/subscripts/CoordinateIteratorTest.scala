@@ -1,4 +1,4 @@
-package gram.tensor
+package gram.tensor.subscripts
 
 import gram.tensor.subscript.CoordinateIterator
 import org.scalatest.FunSuite

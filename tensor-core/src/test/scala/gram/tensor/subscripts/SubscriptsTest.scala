@@ -1,5 +1,6 @@
-package gram.tensor
+package gram.tensor.subscripts
 
+import gram.tensor.Shape
 import gram.tensor.subscript.{Subscript, Subscripts}
 import org.scalatest.FunSuite
 import org.scalatest.Matchers._
@@ -7,7 +8,7 @@ import org.scalatest.Matchers._
 class SubscriptsTest extends FunSuite {
   test("Subscripts should have an iterator over subscripts in a shape") {
     val shape = Shape.of(3, 2)
-    val subscriptIterator = Subscripts.fromShape(shape).iterator
+    val subscriptIterator = Subscripts.iterateFrom(shape)
 
     // Subscript iteration should be equivalent to multi-dimensional iteration.
     subscriptIterator.hasNext shouldBe true

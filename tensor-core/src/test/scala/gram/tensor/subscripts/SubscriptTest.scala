@@ -1,5 +1,6 @@
-package gram.tensor
+package gram.tensor.subscripts
 
+import gram.tensor.Shape
 import gram.tensor.subscript.Subscript
 import org.scalatest.{FunSuite, Matchers}
 
