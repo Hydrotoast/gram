@@ -17,10 +17,7 @@ object Tensor {
     create(shape, data)
   }
 
-  def create[@sp A](
-    shape: Shape,
-    data: Array[A]
-  ): Tensor[A] = {
+  def create[@sp A](shape: Shape, data: Array[A]): Tensor[A] =
     shape match {
       case shape: Shape if shape.rank == 1 =>
         new DenseVector[A](shape(0), data)
@@ -29,5 +26,4 @@ object Tensor {
       case _ =>
         new DenseTensor[A](shape, data)
     }
-  }
 }

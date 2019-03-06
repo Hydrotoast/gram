@@ -4,59 +4,51 @@ import gram.tensor.Shape
 
 trait Subscript extends Iterable[Int] {
 
-  /**
-    * The number of coordinates in this subscript.
-    */
+  /** The number of coordinates in this subscript. */
   def rank: Int
 
-  /**
-    * Returns the coordinate of the given dimension.
+  /** Returns the coordinate of the given dimension.
     *
     * @param dimension The dimension.
     * @return The coordinate.
     */
   def apply(dimension: Int): Int
 
-  /**
-    * Iterates over the coordinates of each dimension.
-    */
+  /** Iterates over the coordinates of each dimension. */
   def iterator: CoordinateIterator
 
-  override def equals(o: Any): Boolean = {
+  override def equals(o: Any): Boolean =
     o match {
       case that: Subscript => eq(that) || iterator.sameElements(that.iterator)
-      case _ => false
+      case _               => false
     }
-  }
 }
 
 object Subscript {
 
-  private final class ArraySubscript(_coordinates: Array[Int]) extends Subscript {
+  private final class ArraySubscript(_coordinates: Array[Int])
+      extends Subscript {
 
-    override def rank: Int = {
+    def rank: Int =
       _coordinates.length
-    }
 
-    override def apply(dimension: Int): Int = {
+    def apply(dimension: Int): Int =
       _coordinates(dimension)
-    }
 
-    override def iterator: CoordinateIterator = {
+    def iterator: CoordinateIterator =
       new Iterator
-    }
 
     private final class Iterator extends CoordinateIterator {
       private val _rank = rank
       private var _currentDimension = 0
 
-      override def hasNext: Boolean = {
+      def hasNext: Boolean =
         _currentDimension < _rank
-      }
 
-      override def next(): Int = {
+      def next(): Int = {
         if (!hasNext) {
-          throw new IllegalStateException("Iterator does not have a next element")
+          throw new IllegalStateException(
+            "Iterator does not have a next element")
         }
 
         // Retrieve the size of the current dimension
@@ -71,12 +63,12 @@ object Subscript {
     }
   }
 
-  private final class LinearIndexSubscript(_index: Int, _shape: Shape) extends Subscript {
-    override def rank: Int = {
+  private final class LinearIndexSubscript(_index: Int, _shape: Shape)
+      extends Subscript {
+    def rank: Int =
       _shape.rank
-    }
 
-    override def apply(dimension: Int): Int = {
+    def apply(dimension: Int): Int = {
       var currentDimension = 0
       var ind = _index
       var coordinate = ind % _shape(currentDimension)
@@ -89,21 +81,18 @@ object Subscript {
       coordinate
     }
 
-    override def iterator: CoordinateIterator = {
+    def iterator: CoordinateIterator =
       new Iterator(_index)
-    }
 
-    private final class Iterator(
-      private var _ind: Int
-    ) extends CoordinateIterator {
+    private final class Iterator(private var _ind: Int)
+        extends CoordinateIterator {
       private val _rank = _shape.rank
       private var _currentDimension = -1
 
-      override def hasNext: Boolean = {
+      def hasNext: Boolean =
         _currentDimension < _rank - 1
-      }
 
-      override def next(): Int = {
+      def next(): Int = {
         if (!hasNext) {
           throw new IllegalStateException()
         }
@@ -117,15 +106,12 @@ object Subscript {
     }
   }
 
-  def of(coordinates: Int*): Subscript = {
+  def of(coordinates: Int*): Subscript =
     new ArraySubscript(coordinates.toArray)
-  }
 
-  def fromArray(coordinates: Array[Int]): Subscript = {
+  def fromArray(coordinates: Array[Int]): Subscript =
     new ArraySubscript(coordinates)
-  }
 
-  def fromLinearIndex(index: Int, shape: Shape): Subscript = {
+  def fromLinearIndex(index: Int, shape: Shape): Subscript =
     new LinearIndexSubscript(index, shape)
-  }
 }

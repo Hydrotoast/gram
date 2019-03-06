@@ -4,9 +4,7 @@ import gram.tensor.Shape
 
 trait SubscriptIterator extends Iterator[Subscript]
 
-/**
-  * Iterates over subscripts.
-  */
+/** Iterates over subscripts. */
 private class ShapeSubscriptIterator(_shape: Shape) extends SubscriptIterator {
   private val _length: Int = _shape.length
   private var _cell: Int = 0
@@ -17,11 +15,10 @@ private class ShapeSubscriptIterator(_shape: Shape) extends SubscriptIterator {
   }
   private val _subscript = Subscript.fromArray(_coordinates)
 
-  override def hasNext: Boolean = {
+  def hasNext: Boolean =
     _cell < _length
-  }
 
-  override def next(): Subscript = {
+  def next(): Subscript = {
     if (!hasNext) {
       throw new IllegalStateException()
     }
@@ -49,13 +46,11 @@ private class ShapeSubscriptIterator(_shape: Shape) extends SubscriptIterator {
 
 private[tensor] object Subscripts {
 
-  /**
-    * Given a shape, constructs the set of subscripts within the shape.
+  /** Given a shape, constructs the set of subscripts within the shape.
     *
     * @param shape The shape.
     * @return the subscripts.
     */
-  def iterateFrom(shape: Shape): SubscriptIterator = {
+  def iterateFrom(shape: Shape): SubscriptIterator =
     new ShapeSubscriptIterator(shape)
-  }
 }

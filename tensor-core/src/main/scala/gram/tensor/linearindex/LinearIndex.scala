@@ -5,8 +5,8 @@ import gram.tensor.subscript.{CoordinateIterator, Subscript}
 
 private[tensor] object LinearIndex {
 
-  /**
-    * Given a shape, aggregates the remaining coordinates into a cartesian index within the shape.
+  /** Given a shape, aggregates the remaining coordinates into a cartesian index
+    * within the shape.
     *
     * @param shape The shape.
     * @return The cartesian index.
@@ -24,13 +24,16 @@ private[tensor] object LinearIndex {
     ind
   }
 
-  /**
-    * Given a shape, aggregates the remaining coordinates into a cartesian index within the shape.
+  /** Given a shape, aggregates the remaining coordinates into a cartesian index
+    * within the shape.
     *
     * @param shape The shape.
     * @return The cartesian index.
     */
-  def fromCoordinateIterator(coordinateIterator: CoordinateIterator, shape: Shape): Int = {
+  def fromCoordinateIterator(
+      coordinateIterator: CoordinateIterator,
+      shape: Shape
+    ): Int = {
     var dimension = 0
     var ind = 0
     var stride = 1
